@@ -5,19 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Umineko Waiting Room</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap'); /* Fancy font for the title */
-        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap'); /* Font for percentages and time text */
+        @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap');
 
         body {
             font-family: 'Arial', sans-serif;
-            margin: 0; /* Remove default margin */
-            background-color: #111; /* Dark background for butterflies */
+            margin: 0;
+            background-color: #111;
             color: white;
             display: flex;
             flex-direction: column;
             align-items: center;
-            min-height: 100vh; /* Allow content to fill the screen */
-            overflow-y: auto; /* Enable vertical scrolling */
+            min-height: 100vh;
+            overflow-y: auto;
         }
 
         .header {
@@ -25,14 +25,14 @@
             font-size: 4em;
             color: gold;
             text-align: center;
-            margin: 20px 0; /* Add margin for spacing */
+            margin: 20px 0;
         }
 
         .calendar {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
             gap: 20px;
-            margin-bottom: 20px; /* Add margin for spacing */
+            margin-bottom: 20px;
         }
 
         .day {
@@ -90,7 +90,7 @@
             align-items: center;
             justify-content: center;
             flex-direction: column;
-            margin-bottom: 20px; /* Add margin for spacing */
+            margin-bottom: 20px;
         }
 
         .loading-wheel {
@@ -98,34 +98,33 @@
             height: 140vw;
             max-width: 600px;
             max-height: 600px;
-            margin-bottom: 10px; /* Space between wheel and percentage */
+            margin-bottom: 10px;
         }
 
         .loading-wheel svg {
-            width: 100%; /* Make SVG responsive */
-            height: 100%; /* Make SVG responsive */
+            width: 100%;
+            height: 100%;
         }
 
         .loading-wheel text {
-            fill: #FF5722; /* Color for countdown text */
-            font-size: 3em; /* Adjust text size */
+            fill: #FF5722;
+            font-size: 3em;
             text-anchor: middle;
             dominant-baseline: middle;
         }
 
         .percentage {
             text-align: center;
-            font-size: 2em; /* Percentage font size */
-            color: #FF5722; /* Match color with wheel */
-            margin-bottom: 5px; /* Space between percentage and last event text */
+            font-size: 2em;
+            color: #FF5722;
+            margin-bottom: 5px;
         }
 
         .last-event {
-            margin-top: 0; /* Remove top margin */
-            text-align: center; /* Center the last event text */
+            margin-top: 0;
+            text-align: center;
         }
 
-        /* Butterfly CSS */
         @keyframes flutter-left {
             0%   { transform: rotate3d(0, 1, 0, 20deg); }
             50% { transform: rotate3d(0, 1, 0, 70deg); }
@@ -193,7 +192,7 @@
         <svg width="500" height="500">
             <circle cx="300" cy="250" r="225" stroke="#ddd" stroke-width="10" fill="none" />
             <circle id="progress-circle" cx="300" cy="250" r="225" stroke="#FF5722" stroke-width="10" fill="none" stroke-dasharray="1413" stroke-dashoffset="1413" />
-            <text id="countdown" x="300" y="250" fill="#FF5722" font-size="3em" text-anchor="middle" dominant-baseline="middle">Loading...</text>
+            <text id="countdown" x="300" y="250" fill="#FF57222" font-size="3em" text-anchor="middle" dominant-baseline="middle">Loading...</text>
         </svg>
     </div>
     <div class="percentage" id="percentage"></div>
@@ -203,7 +202,6 @@
     <script>
         const streamFileUrl = 'https://gist.githubusercontent.com/IshuDivan/27a37e4dc3baa85d5aa1952a215e8567/raw/afd1a5706caf4aea08628b4170feacc03234c51a/schedule.txt';
 
-        // Define butterflies array outside the functions
         var butterflies = [];
 
         async function fetchStreamSchedule() {
@@ -248,9 +246,7 @@
 
             const startDate = new Date(today);
             startDate.setDate(today.getDate() - today.getDay() - 6);
-
             const totalDays = 21; 
-
             const weekDates = createCalendarDates(startDate, totalDays);
             
             weekDates.forEach(({ date, weekday }) => {
@@ -373,10 +369,10 @@
         async function init() {
             try {
                 const schedule = await fetchStreamSchedule();
-                const weekDates = renderTimetable(schedule);
+                renderTimetable(schedule);
                 startCountdown(schedule);
                 updateLastEvent(schedule);
-                createButterflies(); // Initiate butterfly creation
+                createButterflies(); 
             } catch (error) {
                 console.error('Error fetching stream schedule:', error);
                 const timetable = document.getElementById('timetable');
@@ -397,8 +393,7 @@
             var _this = this;
 
             _this.init = function() {
-                // Shift the spawning position to the left by 500 pixels
-                _this.x = Math.floor(Math.random() * (window.innerWidth / 2 - 500)); // Spawn within the left half, leaving a margin
+                _this.x = Math.floor(Math.random() * (window.innerWidth / 2 - 500));
                 _this.y = Math.floor(Math.random() * window.innerHeight);
                 _this.directionX = Math.random() < 0.5;
                 _this.directionY = Math.random() < 0.5;
@@ -410,7 +405,7 @@
             }
 
             _this.moveButterfly = function() {
-                const speed = 0.5; // Adjust the speed of the butterfly
+                const speed = 0.5;
                 _this.domElement.style.webkitTransform = 'translate3D(' + _this.x + 'px, ' + _this.y + 'px, 0px) rotate3d(1, 0.5, 0, 110deg)';
 
                 if (_this.directionX) {
@@ -425,14 +420,17 @@
                     _this.y -= speed;
                 }
 
-                // Remove butterflies if they move off-screen and respawn
                 if (_this.x > window.innerWidth || _this.x < -600 || _this.y > window.innerHeight || _this.y < -100) {
-                    document.body.removeChild(_this.domElement); // Remove the butterfly from the DOM
-                    butterflies = butterflies.filter(butterfly => butterfly !== _this); // Remove from the butterflies array
-                    // Respawn a new butterfly
-                    var newButterfly = new Butterfly();
-                    newButterfly.init();
-                    butterflies.push(newButterfly);
+                    document.body.removeChild(_this.domElement);
+                    butterflies = butterflies.filter(butterfly => butterfly !== _this);
+
+                    // Check the percentage before spawning a new butterfly
+                    const currentPercentage = parseFloat(document.getElementById('percentage').innerText);
+                    if (currentPercentage > 99) {
+                        var newButterfly = new Butterfly();
+                        newButterfly.init();
+                        butterflies.push(newButterfly);
+                    }
                 }
             }
 
@@ -440,7 +438,7 @@
         }
 
         function animate() {
-            for (var i = 0, l = butterflies.length; i < l; i++) {
+            for (var i = 0; i < butterflies.length; i++) {
                 butterflies[i].moveButterfly();
             }
             requestAnimationFrame(animate);
