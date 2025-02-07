@@ -18,7 +18,7 @@
             align-items: center;
             min-height: 100vh;
             overflow-y: auto;
-            position: relative; /* Added for butterfly positioning */
+            position: relative;
         }
 
         .header {
@@ -79,8 +79,8 @@
             color: #555;
         }
 
-        .countdown, .last-event {
-            font-size: 1.5em;
+        .countdown {
+            font-size: 3em;
             text-align: center;
             margin: 20px 0;
             color: gold;
@@ -108,9 +108,8 @@
         }
 
         .loading-wheel text {
-	font-family: 'Great Vibes', cursive;
+            font-family: 'Great Vibes', cursive;
             fill: gold;
-            font-size: 3em;
             text-anchor: middle;
             dominant-baseline: middle;
         }
@@ -123,7 +122,9 @@
         }
 
         .last-event {
-            margin-top: 0;
+            margin-top: 20px;
+            font-size: 1.5em; /* Increase font size */
+            color: gold; /* Set text color to gold */
             text-align: center;
         }
 
@@ -202,10 +203,10 @@
         <svg width="500" height="500">
             <circle cx="300" cy="250" r="225" stroke="#ddd" stroke-width="10" fill="none" />
             <circle id="progress-circle" cx="300" cy="250" r="225" stroke="#FF5722" stroke-width="10" fill="none" stroke-dasharray="1413" stroke-dashoffset="1413" />
-            <text id="countdown" x="300" y="250" fill="#FF57222" font-size="3em" text-anchor="middle" dominant-baseline="middle">Loading...</text>
+            <text id="countdown" x="300" y="220" fill="#FF5722" font-size="3em" text-anchor="middle" dominant-baseline="middle">Loading...</text>
+            <text id="percentage" x="300" y="290" fill="#FF5722" font-size="2em" text-anchor="middle" dominant-baseline="middle">0%</text>
         </svg>
     </div>
-    <div class="percentage" id="percentage"></div>
     <div class="last-event" id="last-event"></div>
     <div class="calendar" id="timetable"></div>
 
