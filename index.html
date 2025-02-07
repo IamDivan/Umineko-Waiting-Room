@@ -5,8 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Umineko Waiting Room</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap'); /* Fancy font for the title */
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap'); /* Font for percentages and time text */
+        
         body {
-            font-family: 'Arial', sans-serif; 
+            font-family: 'Arial', sans-serif; /* You can choose any font you like */
             margin: 20px;
             background-color: #2c3e50; /* Dark blue-gray background */
             color: white; /* Change text color to white for better contrast */
@@ -16,10 +19,11 @@
         }
 
         .header {
-            color: gold; /* Gold color for the title */
-            font-size: 3em; /* Large font size */
-            margin-bottom: 20px; /* Space below the title */
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Shadow for the title */
+            font-family: 'Great Vibes', cursive; /* Fancy font for the title */
+            font-size: 4em; /* Huge font size */
+            color: gold; /* Golden color */
+            text-align: center;
+            margin-bottom: 20px;
         }
 
         .calendar {
@@ -109,7 +113,7 @@
             text-align: center;
             font-size: 2em; /* Percentage font size */
             color: #FF5722; /* Match color with wheel */
-            margin-bottom: 10px; /* Space between percentage and last event text */
+            margin-bottom: 5px; /* Space between percentage and last event text */
         }
 
         .last-event {
@@ -120,33 +124,19 @@
 </head>
 <body>
     <div class="header">Umineko Waiting Room</div>
-    <div class="loading-container">
-        <div class="loading-wheel" id="loading-wheel">
-            <svg>
-                <circle cx="50%" cy="50%" r="35%" stroke="#ddd" stroke-width="20" fill="none" /> <!-- Fatter rim -->
-                <circle id="progress-circle" cx="50%" cy="50%" r="35%" 
-                        stroke="#FF5722" stroke-width="20" fill="none" 
-                        stroke-dasharray="219.91" stroke-dashoffset="219.91" stroke-linecap="round" />
-                <text id="countdown-text" x="50%" y="50%">00:00:00:00</text>
-            </svg>
-        </div>
-        <div class="percentage" id="percentage">0.000%</div>
-        <div class="last-event" id="last-event"></div> <!-- Moved inside loading-container -->
-    </div>
+    <div class="loading-wheel" id="loading-wheel">
+		<svg width="500" height="500">
+			<circle cx="300" cy="250" r="225" stroke="#ddd" stroke-width="10" fill="none" />
+			<circle id="progress-circle" cx="300" cy="250" r="225" stroke="#FF5722" stroke-width="10" fill="none" stroke-dasharray="1413" stroke-dashoffset="1413" />
+			<text id="countdown" x="300" y="250" fill="#FF5722" font-size="3em" text-anchor="middle" dominant-baseline="middle">Loading...</text>
+		</svg>
+	</div>
+    <div class="percentage" id="percentage"></div>
+    <div class="last-event" id="last-event"></div>
     <div class="calendar" id="timetable"></div>
 
     <script>
-        const streamFileUrl = 'https://gist.githubusercontent.com/IamDivan/2920baf2d5e1d87c4fd5d00f41c18db1/raw/def1512378612625ea99b514a58ef7f73cdd5cb3/gistfile1.txt';
-
-        // Function to generate a random color
-        function getRandomColor() {
-            const letters = '0123456789ABCDEF';
-            let color = '#';
-            for (let i = 0; i < 6; i++) {
-                color += letters[Math.floor(Math.random() * 16)];
-            }
-            return color;
-        }
+        const streamFileUrl = 'https://gist.githubusercontent.com/IshuDivan/27a37e4dc3baa85d5aa1952a215e8567/raw/afd1a5706caf4aea08628b4170feacc03234c51a/schedule.txt';
 
         async function fetchStreamSchedule() {
             const response = await fetch(streamFileUrl);
@@ -166,12 +156,21 @@
                 const date = new Date(startDate);
                 date.setDate(date.getDate() + i);
                 const dd = String(date.getDate()).padStart(2, '0');
-                const mm = String(date.getMonth() + 1).padStart(2, '0'); 
+                const mm = String(date.getMonth() + 1).padStart(2, '0'); // January is 0!
                 const yyyy = date.getFullYear();
                 const weekday = date.toLocaleString('en-US', { weekday: 'long' });
-                dates.push({ date: `${dd}.${mm}.${yyyy}`, weekday }); 
+                dates.push({ date: `${dd}.${mm}.${yyyy}`, weekday }); // Format: DD.MM.YYYY
             }
             return dates;
+        }
+
+        function getRandomColor() {
+            const letters = '0123456789ABCDEF';
+            let color = '#';
+            for (let i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
         }
 
         function renderTimetable(schedule) {
@@ -223,8 +222,8 @@
 
             // Find the closest future date with "Umineko" in the schedule
             for (const [date, category] of Object.entries(schedule)) {
-                const eventDate = new Date(date.split('.').reverse().join('-')); 
-                eventDate.setHours(20, 0, 0, 0); 
+                const eventDate = new Date(date.split('.').reverse().join('-')); // Convert DD.MM.YYYY to YYYY-MM-DD
+                eventDate.setHours(20, 0, 0, 0); // Set time to 20:00
 
                 if (eventDate > now && category.includes("Umineko")) {
                     targetDate = eventDate;
@@ -237,27 +236,20 @@
             }
 
             if (!targetDate) {
-                document.getElementById('countdown-text').textContent = "N/A";
-                document.getElementById('percentage').textContent = "0.000%";
+                document.getElementById('countdown').innerHTML = "No upcoming 'Umineko' events found.";
                 return;
             }
 
-            const countdownElement = document.getElementById('countdown-text');
+            const countdownElement = document.getElementById('countdown');
             const loadingCircle = document.getElementById('progress-circle');
             const percentageElement = document.getElementById('percentage');
-            const radius = 35; 
-            const circumference = 2 * Math.PI * radius; 
-
-            loadingCircle.setAttribute('stroke-dasharray', circumference);
-            loadingCircle.setAttribute('stroke-dashoffset', circumference); 
-
             const totalDuration = targetDate - lastEventDate;
 
             const updateCountdown = () => {
                 const remainingTime = targetDate - new Date();
 
                 if (remainingTime < 0) {
-                    countdownElement.textContent = "00:00:00:00";
+                    countdownElement.innerHTML = "Event has started!";
                     clearInterval(interval);
                     return;
                 }
@@ -267,16 +259,17 @@
                 const minutes = Math.floor((remainingTime % (1000 * 60 * 60)) / (1000 * 60));
                 const seconds = Math.floor((remainingTime % (1000 * 60)) / 1000);
 
-                countdownElement.textContent = `${days}:${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                countdownElement.innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
 
+                // Update loading wheel
                 const elapsedTime = new Date() - lastEventDate;
                 const percentage = Math.min((elapsedTime / totalDuration) * 100, 100);
-                const offset = circumference - (percentage / 100) * circumference; // Calculate new offset
-                loadingCircle.style.strokeDashoffset = offset; // Update the offset to fill the circle
-                percentageElement.textContent = `${(percentage).toFixed(3)}%`; 
+                const offset = 1413 - (percentage / 100) * 1413; // 1413 is the circumference of the circle
+                loadingCircle.style.strokeDashoffset = offset;
+                percentageElement.innerHTML = `${percentage.toFixed(5)}%`; // Show percentage to 5 decimal places
             };
 
-            updateCountdown(); 
+            updateCountdown(); // Initial call
             const interval = setInterval(updateCountdown, 1000);
         }
 
@@ -284,10 +277,10 @@
             const now = new Date();
             let lastEventDate = null;
 
-			//looking for "Umineko"
+            // Find the last date with "Umineko" in the schedule
             for (const [date, category] of Object.entries(schedule)) {
                 const eventDate = new Date(date.split('.').reverse().join('-')); // Convert DD.MM.YYYY to YYYY-MM-DD
-                eventDate.setHours(20, 0, 0, 0); 
+                eventDate.setHours(20, 0, 0, 0); // Set time to 20:00
 
                 if (eventDate < now && category.includes("Umineko")) {
                     lastEventDate = eventDate;
@@ -295,6 +288,7 @@
             }
 
             const lastEventElement = document.getElementById('last-event');
+
             if (lastEventDate) {
                 const updateLastEventTime = () => {
                     const timeSinceLastEvent = new Date() - lastEventDate;
@@ -307,7 +301,7 @@
                     lastEventElement.innerHTML = `Time since last 'Umineko' event: ${days}d ${hours}h ${minutes}m ${seconds}s`;
                 };
 
-                updateLastEventTime(); 
+                updateLastEventTime(); // Initial call
                 const interval = setInterval(updateLastEventTime, 1000);
             } else {
                 lastEventElement.innerHTML = "No past 'Umineko' events found.";
@@ -318,14 +312,15 @@
             try {
                 const schedule = await fetchStreamSchedule();
                 const weekDates = renderTimetable(schedule);
-                startCountdown(schedule); 
-                updateLastEvent(schedule); 
+                startCountdown(schedule); // Start the countdown after loading the timetable
+                updateLastEvent(schedule); // Update the last event time
             } catch (error) {
                 console.error('Error fetching stream schedule:', error);
                 const timetable = document.getElementById('timetable');
                 timetable.innerHTML = '<div class="day">Failed to load schedule</div>';
             }
         }
+
         init();
     </script>
 </body>
