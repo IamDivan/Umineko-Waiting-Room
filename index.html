@@ -124,67 +124,9 @@
             margin-top: 0;
             text-align: center;
         }
-
-        @keyframes flutter-left {
-            0%   { transform: rotate3d(0, 1, 0, 20deg); }
-            50% { transform: rotate3d(0, 1, 0, 70deg); }
-            100% { transform: rotate3d(0, 1, 0, 20deg); }
-        }
-
-        @keyframes flutter-right {
-            0%   { transform: rotate3d(0, 1, 0, -20deg); }
-            50% { transform: rotate3d(0, 1, 0, -70deg); }
-            100% { transform: rotate3d(0, 1, 0, -20deg); }
-        }
-
-        .butterfly {
-            width: 100px;
-            height: 100px;
-            position: absolute;
-            transform-style: preserve-3d;
-            transform: rotate3d(1, 0.5, 0, 110deg);
-        }
-
-        .left-wing, .right-wing {
-            width: 24px;
-            height: 42px;
-            position: absolute;
-            top: 10px;
-        }
-
-        .left-wing {
-            left: 10px;
-            transform-origin: 24px 50%;
-            transform: rotate3d(0, 1, 0, 20deg);
-            animation: flutter-left 0.3s infinite;
-        }
-
-        .right-wing {
-            left: 34px;
-            transform: rotate3d(0, 1, 0, -20deg);
-            transform-origin: 0px 50%;
-            animation: flutter-right 0.3s infinite;
-        }
-
-        .top, .bottom {
-            background: yellow;
-            opacity: 0.7;
-            position: absolute;
-        }
-
-        .top {
-            width: 20px;
-            height: 20px;
-            border-radius: 10px;
-        }
-
-        .bottom {
-            top: 18px;
-            width: 24px;
-            height: 24px;
-            border-radius: 12px;
-        }
     </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.34/moment-timezone-with-data.min.js"></script>
 </head>
 <body>
     <div class="header">Umineko Waiting Room</div>
@@ -202,8 +144,6 @@
     <script>
         const streamFileUrl = 'https://gist.githubusercontent.com/IshuDivan/27a37e4dc3baa85d5aa1952a215e8567/raw/afd1a5706caf4aea08628b4170feacc03234c51a/schedule.txt';
 
-        var butterflies = [];
-
         async function fetchStreamSchedule() {
             const response = await fetch(streamFileUrl);
             const text = await response.text();
@@ -219,50 +159,34 @@
         function createCalendarDates(startDate, numDays) {
             const dates = [];
             for (let i = 0; i < numDays; i++) {
-                const date = new Date(startDate);
-                date.setDate(date.getDate() + i);
-                const dd = String(date.getDate()).padStart(2, '0');
-                const mm = String(date.getMonth() + 1).padStart(2, '0');
-                const yyyy = date.getFullYear();
-                const weekday = date.toLocaleString('en-US', { weekday: 'long' });
-                dates.push({ date: `${dd}.${mm}.${yyyy}`, weekday });
+                const date = moment(startDate).add(i, 'days');
+                dates.push({ date: date.format('DD.MM.YYYY'), weekday: date.format('dddd') });
             }
             return dates;
         }
 
-        function getRandomColor() {
-            const letters = '0123456789ABCDEF';
-            let color = '#';
-            for (let i = 0; i < 6; i++) {
-                color += letters[Math.floor(Math.random() * 16)];
-            }
-            return color;
-        }
-
         function renderTimetable(schedule) {
             const timetable = document.getElementById('timetable');
-            const today = new Date();
+            const today = moment().tz("Europe/Moscow");
             const categoryColors = {}; 
 
-            const startDate = new Date(today);
-            startDate.setDate(today.getDate() - today.getDay() - 6);
+            const startDate = today.clone().subtract(today.day() + 6, 'days');
             const totalDays = 21; 
             const weekDates = createCalendarDates(startDate, totalDays);
             
             weekDates.forEach(({ date, weekday }) => {
                 const dayDiv = document.createElement('div');
                 dayDiv.className = 'day';
-                dayDiv.setAttribute('data-day', weekday);
                 const category = schedule[date] || 'No streams';
 
                 if (!categoryColors[category]) {
                     categoryColors[category] = getRandomColor();
                 }
 
-                const eventDate = new Date(date.split('.').reverse().join('-')); 
-                const isToday = eventDate.toDateString() === today.toDateString(); 
+                const eventDate = moment(date, 'DD.MM.YYYY').tz("Europe/Moscow").set({ hour: 20, minute: 0, second: 0 });
+                const isToday = eventDate.isSame(today, 'day'); 
 
-                if (!isToday && eventDate < today) {
+                if (!isToday && eventDate.isBefore(today)) {
                     dayDiv.classList.add('past-day'); 
                 }
 
@@ -272,25 +196,22 @@
                 `;
                 timetable.appendChild(dayDiv);
             });
-
-            return weekDates;
         }
 
         function startCountdown(schedule) {
-            const now = new Date();
+            const now = moment().tz("Europe/Moscow");
             let targetDate = null;
             let lastEventDate = null;
 
             for (const [date, category] of Object.entries(schedule)) {
-                const eventDate = new Date(date.split('.').reverse().join('-'));
-                eventDate.setHours(20, 0, 0, 0);
+                const eventDate = moment(date, 'DD.MM.YYYY').tz("Europe/Moscow").set({ hour: 20, minute: 0, second: 0 });
 
-                if (eventDate > now && category.includes("Umineko")) {
+                if (eventDate.isAfter(now) && category.includes("Umineko")) {
                     targetDate = eventDate;
                     break;
                 }
 
-                if (eventDate < now && category.includes("Umineko")) {
+                if (eventDate.isBefore(now) && category.includes("Umineko")) {
                     lastEventDate = eventDate;
                 }
             }
@@ -303,10 +224,10 @@
             const countdownElement = document.getElementById('countdown');
             const loadingCircle = document.getElementById('progress-circle');
             const percentageElement = document.getElementById('percentage');
-            const totalDuration = targetDate - lastEventDate;
+            const totalDuration = targetDate.diff(lastEventDate);
 
             const updateCountdown = () => {
-                const remainingTime = targetDate - new Date();
+                const remainingTime = targetDate.diff(moment().tz("Europe/Moscow"));
 
                 if (remainingTime < 0) {
                     countdownElement.innerHTML = "Event has started!";
@@ -314,14 +235,10 @@
                     return;
                 }
 
-                const days = Math.floor(remainingTime / (1000 * 60 * 60 * 24));
-                const hours = Math.floor((remainingTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutes = Math.floor((remainingTime % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((remainingTime % (1000 * 60)) / 1000);
+                const duration = moment.duration(remainingTime);
+                countdownElement.innerHTML = `${duration.days()}d ${duration.hours()}h ${duration.minutes()}m ${duration.seconds()}s`;
 
-                countdownElement.innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
-
-                const elapsedTime = new Date() - lastEventDate;
+                const elapsedTime = moment().tz("Europe/Moscow").diff(lastEventDate);
                 const percentage = Math.min((elapsedTime / totalDuration) * 100, 100);
                 const offset = 1413 - (percentage / 100) * 1413;
                 loadingCircle.style.strokeDashoffset = offset;
@@ -333,14 +250,13 @@
         }
 
         function updateLastEvent(schedule) {
-            const now = new Date();
+            const now = moment().tz("Europe/Moscow");
             let lastEventDate = null;
 
             for (const [date, category] of Object.entries(schedule)) {
-                const eventDate = new Date(date.split('.').reverse().join('-'));
-                eventDate.setHours(20, 0, 0, 0);
+                const eventDate = moment(date, 'DD.MM.YYYY').tz("Europe/Moscow").set({ hour: 20, minute: 0, second: 0 });
 
-                if (eventDate < now && category.includes("Umineko")) {
+                if (eventDate.isBefore(now) && category.includes("Umineko")) {
                     lastEventDate = eventDate;
                 }
             }
@@ -349,14 +265,10 @@
 
             if (lastEventDate) {
                 const updateLastEventTime = () => {
-                    const timeSinceLastEvent = new Date() - lastEventDate;
+                    const timeSinceLastEvent = moment().tz("Europe/Moscow").diff(lastEventDate);
 
-                    const days = Math.floor(timeSinceLastEvent / (1000 * 60 * 60 * 24));
-                    const hours = Math.floor((timeSinceLastEvent % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                    const minutes = Math.floor((timeSinceLastEvent % (1000 * 60 * 60)) / (1000 * 60));
-                    const seconds = Math.floor((timeSinceLastEvent % (1000 * 60)) / 1000);
-
-                    lastEventElement.innerHTML = `Time since last 'Umineko' event: ${days}d ${hours}h ${minutes}m ${seconds}s`;
+                    const duration = moment.duration(timeSinceLastEvent);
+                    lastEventElement.innerHTML = `Time since last 'Umineko' event: ${duration.days()}d ${duration.hours()}h ${duration.minutes()}m ${duration.seconds()}s`;
                 };
 
                 updateLastEventTime();
@@ -372,7 +284,6 @@
                 renderTimetable(schedule);
                 startCountdown(schedule);
                 updateLastEvent(schedule);
-                createButterflies(); 
             } catch (error) {
                 console.error('Error fetching stream schedule:', error);
                 const timetable = document.getElementById('timetable');
@@ -380,68 +291,13 @@
             }
         }
 
-        function createButterflies() {
-            for (var i = 0; i < 20; i++) {
-                var b = new Butterfly();
-                b.init();
-                butterflies.push(b);
+        function getRandomColor() {
+            const letters = '0123456789ABCDEF';
+            let color = '#';
+            for (let i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
             }
-            animate();
-        }
-
-        function Butterfly() {
-            var _this = this;
-
-            _this.init = function() {
-                _this.x = Math.floor(Math.random() * (window.innerWidth / 2 - 500));
-                _this.y = Math.floor(Math.random() * window.innerHeight);
-                _this.directionX = Math.random() < 0.5;
-                _this.directionY = Math.random() < 0.5;
-
-                _this.domElement = document.createElement('div');
-                _this.domElement.className = 'butterfly';
-                _this.domElement.innerHTML = '<div class="left-wing"><div class="top"></div><div class="bottom"></div></div><div class="right-wing"><div class="top"></div><div class="bottom"></div></div>';
-                document.body.appendChild(_this.domElement);
-            }
-
-            _this.moveButterfly = function() {
-                const speed = 0.5;
-                _this.domElement.style.webkitTransform = 'translate3D(' + _this.x + 'px, ' + _this.y + 'px, 0px) rotate3d(1, 0.5, 0, 110deg)';
-
-                if (_this.directionX) {
-                    _this.x += speed;
-                } else {
-                    _this.x -= speed;
-                }
-
-                if (_this.directionY) {
-                    _this.y += speed;
-                } else {
-                    _this.y -= speed;
-                }
-
-                if (_this.x > window.innerWidth || _this.x < -600 || _this.y > window.innerHeight || _this.y < -100) {
-                    document.body.removeChild(_this.domElement);
-                    butterflies = butterflies.filter(butterfly => butterfly !== _this);
-
-                    // Check the percentage before spawning a new butterfly
-                    const currentPercentage = parseFloat(document.getElementById('percentage').innerText);
-                    if (currentPercentage > 99) {
-                        var newButterfly = new Butterfly();
-                        newButterfly.init();
-                        butterflies.push(newButterfly);
-                    }
-                }
-            }
-
-            return _this;
-        }
-
-        function animate() {
-            for (var i = 0; i < butterflies.length; i++) {
-                butterflies[i].moveButterfly();
-            }
-            requestAnimationFrame(animate);
+            return color;
         }
 
         init();
