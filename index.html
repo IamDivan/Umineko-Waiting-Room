@@ -18,6 +18,7 @@
             align-items: center;
             min-height: 100vh;
             overflow-y: auto;
+            position: relative; /* Added for butterfly positioning */
         }
 
         .header {
@@ -124,6 +125,72 @@
             margin-top: 0;
             text-align: center;
         }
+
+        /* Butterfly CSS */
+        @keyframes flutter-left {
+            0%   { transform: rotate3d(0, 1, 0, 20deg); }
+            50% { transform: rotate3d(0, 1, 0, 70deg); }
+            100% { transform: rotate3d(0, 1, 0, 20deg); }
+        }
+
+        @keyframes flutter-right {
+            0%   { transform: rotate3d(0, 1, 0, -20deg); }
+            50% { transform: rotate3d(0, 1, 0, -70deg); }
+            100% { transform: rotate3d(0, 1, 0, -20deg); }
+        }
+
+        .butterfly {
+            width: 100px;
+            height: 100px;
+            position: absolute;
+            top: 0; bottom: 0; left: 0; right: 0;
+            transform-style: preserve-3d;
+            transform: rotate3d(1, 0.5, 0, 110deg);
+        }
+
+        .left-wing, .right-wing {
+            width: 24px;
+            height: 42px;
+            position: absolute;
+            top: 10px;  
+        }
+
+        .left-wing {
+            left: 10px;
+            transform-origin: 24px 50%;
+            transform: rotate3d(0, 1, 0, 20deg);
+            animation: flutter-left 0.3s infinite;
+        }
+
+        .right-wing {
+            left: 34px;
+            transform: rotate3d(0, 1, 0, -20deg);
+            transform-origin: 0px 50%;
+            animation: flutter-right 0.3s infinite;
+        }
+
+        .left-wing .top {
+            right: 0;
+        }
+
+        .top, .bottom {
+            background: gold;
+            opacity: 0.7;
+            position: absolute;
+        }
+
+        .top {
+            width: 20px;
+            height: 20px;
+            border-radius: 10px;
+        }
+
+        .bottom {
+            top: 18px;
+            width: 24px;
+            height: 24px;
+            border-radius: 12px;
+        }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.34/moment-timezone-with-data.min.js"></script>
@@ -142,6 +209,67 @@
     <div class="calendar" id="timetable"></div>
 
     <script>
+        var butterflies = [];
+
+        function initButterflies() {
+            for (var i = 0; i < 20; i++) {
+                var b = new Butterfly();
+                b.init();
+                butterflies.push(b);
+            }
+            animate();
+        }
+
+        function Butterfly() {
+            var _this = this;
+
+            _this.init = function() {
+                _this.x = Math.floor(Math.random() * window.innerWidth);
+                _this.y = Math.floor(Math.random() * window.innerHeight);
+                _this.directionX = true;
+                _this.directionY = true;
+
+                _this.domElement = document.createElement('div');
+                _this.domElement.className = 'butterfly';
+                _this.domElement.innerHTML = '<div class="left-wing"><div class="top"></div><div class="bottom"></div></div><div class="right-wing"><div class="top"></div><div class="bottom"></div></div>';
+                document.getElementsByTagName('body')[0].appendChild(_this.domElement);
+            }
+
+            _this.moveButterfly = function() {
+                _this.domElement.style.webkitTransform = 'translate3D(' + _this.x + 'px, ' + _this.y + 'px, 0px) rotate3d(1, 0.5, 0, 110deg)';
+                var randomnumberX = Math.floor(Math.random() * 11);
+                var randomnumberY = Math.floor(Math.random() * 11);
+                if (randomnumberX > 8) {
+                    _this.directionX = _this.directionX * -1;
+                }
+
+                if (randomnumberY > 8) {
+                    _this.directionY = _this.directionY * -1;
+                }
+
+                if (_this.directionX == true) {
+                    _this.x = _this.x + 1;
+                } else {
+                    _this.x = _this.x - 1;
+                }
+
+                if (_this.directionY == true) {
+                    _this.y = _this.y + 1;
+                } else {
+                    _this.y = _this.y - 1;
+                }
+            }
+
+            return _this;
+        }
+
+        function animate() {
+            for (var i = 0, l = butterflies.length; i < l; i++) {
+                butterflies[i].moveButterfly();
+            }
+            webkitRequestAnimationFrame(animate);
+        }
+
         const streamFileUrl = 'https://gist.githubusercontent.com/IshuDivan/27a37e4dc3baa85d5aa1952a215e8567/raw/afd1a5706caf4aea08628b4170feacc03234c51a/schedule.txt';
 
         async function fetchStreamSchedule() {
@@ -173,7 +301,7 @@
             const startDate = today.clone().subtract(today.day() + 6, 'days');
             const totalDays = 21; 
             const weekDates = createCalendarDates(startDate, totalDays);
-            
+
             weekDates.forEach(({ date, weekday }) => {
                 const dayDiv = document.createElement('div');
                 dayDiv.className = 'day';
@@ -243,6 +371,11 @@
                 const offset = 1413 - (percentage / 100) * 1413;
                 loadingCircle.style.strokeDashoffset = offset;
                 percentageElement.innerHTML = `${percentage.toFixed(5)}%`;
+
+                // Check percentage for butterfly spawning
+                if (percentage > 95 && butterflies.length === 0) {
+                    initButterflies();
+                }
             };
 
             updateCountdown();
