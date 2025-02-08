@@ -229,16 +229,28 @@
             }
 
             this.moveButterfly = function() {
-                this.domElement.style.transform = 'translate3D(' + this.x + 'px, ' + this.y + 'px, 0px) rotate3d(1, 0.5, 0, 110deg)';
-                var randomnumberX = Math.random();
-                var randomnumberY = Math.random();
-                
-                if (randomnumberX > 0.8) this.directionX = !this.directionX;
-                if (randomnumberY > 0.8) this.directionY = !this.directionY;
+				// Define padding from the edges
+				const padding = 20; // Adjust this value for more or less padding
+				const boundaryX = window.innerWidth - 150 - padding; // 100 is the width of the butterfly
+				const boundaryY = window.innerHeight - 150 - padding; // 100 is the height of the butterfly
 
-                this.x += this.directionX ? 1 : -1;
-                this.y += this.directionY ? 1 : -1;
-            }
+				this.domElement.style.transform = 'translate3D(' + this.x + 'px, ' + this.y + 'px, 0px) rotate3d(1, 0.5, 0, 110deg)';
+				var randomnumberX = Math.random();
+				var randomnumberY = Math.random();
+				
+				if (randomnumberX > 0.8) this.directionX = !this.directionX;
+				if (randomnumberY > 0.8) this.directionY = !this.directionY;
+
+				// Update position based on direction
+				this.x += this.directionX ? 1 : -1;
+				this.y += this.directionY ? 1 : -1;
+
+				// Keep the butterfly within the boundaries with padding
+				if (this.x < padding) this.x = padding; // Keep within left padding
+				if (this.x > boundaryX) this.x = boundaryX; // Keep within right boundary
+				if (this.y < padding) this.y = padding; // Keep within top padding
+				if (this.y > boundaryY) this.y = boundaryY; // Keep within bottom boundary
+			}
 
             return this;
         }
