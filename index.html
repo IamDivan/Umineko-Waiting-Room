@@ -488,6 +488,7 @@
 
         document.getElementById('playButton').addEventListener('click', function() {
             const rainSound = document.getElementById('rainSound');
+			rainSound.volume = 0.3; // Set volume to 30%
             rainSound.currentTime = 0; // Start from the beginning
             rainSound.play();
 
