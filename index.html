@@ -297,7 +297,7 @@
 
         function renderTimetable(schedule) {
             const timetable = document.getElementById('timetable');
-            const today = moment().tz("Europe/Moscow");
+            const today = moment.utc(); // Current time in UTC
             const categoryColors = {}; 
 
             const startDate = today.clone().subtract(today.day() + 6, 'days');
@@ -313,7 +313,7 @@
                     categoryColors[category] = getRandomColor();
                 }
 
-                const eventDate = moment(date, 'DD.MM.YYYY').tz("Europe/Moscow").set({ hour: 20, minute: 0, second: 0 });
+                const eventDate = moment.utc(date, 'DD.MM.YYYY').set({ hour: 17, minute: 0, second: 0 }); // Changed to 17:00 UTC
                 const isToday = eventDate.isSame(today, 'day'); 
 
                 if (!isToday && eventDate.isBefore(today)) {
@@ -329,12 +329,12 @@
         }
 
         function startCountdown(schedule) {
-            const now = moment().tz("Europe/Moscow");
+            const now = moment.utc(); // Current time in UTC
             let targetDate = null;
             let lastEventDate = null;
 
             for (const [date, category] of Object.entries(schedule)) {
-                const eventDate = moment(date, 'DD.MM.YYYY').tz("Europe/Moscow").set({ hour: 20, minute: 0, second: 0 });
+                const eventDate = moment.utc(date, 'DD.MM.YYYY').set({ hour: 17, minute: 0, second: 0 }); // Changed to 17:00 UTC
 
                 if (eventDate.isAfter(now) && category.includes("Umineko")) {
                     targetDate = eventDate;
@@ -357,7 +357,7 @@
             const totalDuration = targetDate.diff(lastEventDate);
 
             const updateCountdown = () => {
-                const remainingTime = targetDate.diff(moment().tz("Europe/Moscow"));
+                const remainingTime = targetDate.diff(moment.utc());
 
                 if (remainingTime < 0) {
                     countdownElement.innerHTML = "Event has started!";
@@ -368,7 +368,7 @@
                 const duration = moment.duration(remainingTime);
                 countdownElement.innerHTML = `${duration.days()}d ${duration.hours()}h ${duration.minutes()}m ${duration.seconds()}s`;
 
-                const elapsedTime = moment().tz("Europe/Moscow").diff(lastEventDate);
+                const elapsedTime = moment.utc().diff(lastEventDate);
                 const percentage = Math.min((elapsedTime / totalDuration) * 100, 100);
                 const offset = 1413 - (percentage / 100) * 1413;
                 loadingCircle.style.strokeDashoffset = offset;
@@ -385,11 +385,11 @@
         }
 
         function updateLastEvent(schedule) {
-            const now = moment().tz("Europe/Moscow");
+            const now = moment.utc(); // Current time in UTC
             let lastEventDate = null;
 
             for (const [date, category] of Object.entries(schedule)) {
-                const eventDate = moment(date, 'DD.MM.YYYY').tz("Europe/Moscow").set({ hour: 20, minute: 0, second: 0 });
+                const eventDate = moment.utc(date, 'DD.MM.YYYY').set({ hour: 17, minute: 0, second: 0 }); // Changed to 17:00 UTC
 
                 if (eventDate.isBefore(now) && category.includes("Umineko")) {
                     lastEventDate = eventDate;
@@ -400,7 +400,7 @@
 
             if (lastEventDate) {
                 const updateLastEventTime = () => {
-                    const timeSinceLastEvent = moment().tz("Europe/Moscow").diff(lastEventDate);
+                    const timeSinceLastEvent = moment.utc().diff(lastEventDate);
 
                     const duration = moment.duration(timeSinceLastEvent);
                     lastEventElement.innerHTML = `Time since last 'Umineko' event: ${duration.days()}d ${duration.hours()}h ${duration.minutes()}m ${duration.seconds()}s`;
