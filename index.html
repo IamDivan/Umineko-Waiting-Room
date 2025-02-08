@@ -21,12 +21,38 @@
             position: relative;
         }
 
+        .rain {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .drop {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.6);
+            width: 2px;
+            height: 10px;
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(100vh);
+            }
+        }
+
         .header {
             font-family: 'Great Vibes', cursive;
             font-size: 4em;
             color: gold;
             text-align: center;
             margin: 20px 0;
+            z-index: 1;
         }
 
         .calendar {
@@ -34,6 +60,7 @@
             grid-template-columns: repeat(7, 1fr);
             gap: 20px;
             margin-bottom: 20px;
+            z-index: 1;
         }
 
         .day {
@@ -46,6 +73,7 @@
             height: 150px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
             transition: transform 0.2s;
+            z-index: 1;
         }
 
         .day:hover {
@@ -100,6 +128,7 @@
             max-width: 600px;
             max-height: 600px;
             margin-bottom: 10px;
+            z-index: 1;
         }
 
         .loading-wheel svg {
@@ -126,6 +155,23 @@
             font-size: 1.5em;
             color: gold;
             text-align: center;
+            z-index: 1;
+        }
+
+        .button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: gold;
+            border: none;
+            color: black;
+            cursor: pointer;
+            border-radius: 5px;
+            margin: 20px 0;
+            z-index: 1;
+        }
+
+        .button:hover {
+            background-color: #ffd700;
         }
 
         @keyframes flutter-left {
@@ -191,7 +237,13 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.34/moment-timezone-with-data.min.js"></script>
 </head>
 <body>
+    <div class="rain" id="rain"></div>
     <div class="header">Umineko Waiting Room</div>
+    <button class="button" id="playButton">Play Rain Sounds</button>
+    <audio id="rainSound" loop>
+        <source src="https://www.soundjay.com/nature/sounds/rain-01.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
     <div class="loading-wheel" id="loading-wheel">
         <svg width="500" height="500">
             <circle cx="300" cy="250" r="225" stroke="#ddd" stroke-width="10" fill="none" />
@@ -204,6 +256,21 @@
     <div class="calendar" id="timetable"></div>
 
     <script>
+        // Rain effect
+        function createRain() {
+            const rainContainer = document.getElementById('rain');
+            for (let i = 0; i < 100; i++) {
+                const drop = document.createElement('div');
+                drop.className = 'drop';
+                drop.style.left = Math.random() * 100 + 'vw';
+                drop.style.animationDuration = Math.random() * 0.5 + 0.5 + 's'; // Random duration between 0.5s and 1s
+                drop.style.opacity = Math.random(); // Random opacity
+                rainContainer.appendChild(drop);
+            }
+        }
+
+        createRain();
+
         var butterflies = [];
 
         function initButterflies() {
@@ -229,28 +296,24 @@
             }
 
             this.moveButterfly = function() {
-				// Define padding from the edges
-				const padding = 20; // Adjust this value for more or less padding
-				const boundaryX = window.innerWidth - 150 - padding; // 100 is the width of the butterfly
-				const boundaryY = window.innerHeight - 150 - padding; // 100 is the height of the butterfly
+                const padding = 20; // Adjust this value for more or less padding
+                const boundaryX = window.innerWidth - 150 - padding; // 100 is the width of the butterfly
 
-				this.domElement.style.transform = 'translate3D(' + this.x + 'px, ' + this.y + 'px, 0px) rotate3d(1, 0.5, 0, 110deg)';
-				var randomnumberX = Math.random();
-				var randomnumberY = Math.random();
-				
-				if (randomnumberX > 0.8) this.directionX = !this.directionX;
-				if (randomnumberY > 0.8) this.directionY = !this.directionY;
+                this.domElement.style.transform = 'translate3D(' + this.x + 'px, ' + this.y + 'px, 0px) rotate3d(1, 0.5, 0, 110deg)';
+                var randomnumberX = Math.random();
+                var randomnumberY = Math.random();
+                
+                if (randomnumberX > 0.8) this.directionX = !this.directionX;
+                if (randomnumberY > 0.8) this.directionY = !this.directionY;
 
-				// Update position based on direction
-				this.x += this.directionX ? 1 : -1;
-				this.y += this.directionY ? 1 : -1;
+                this.x += this.directionX ? 1 : -1;
+                this.y += this.directionY ? 1 : -1;
 
-				// Keep the butterfly within the boundaries with padding
-				if (this.x < padding) this.x = padding; // Keep within left padding
-				if (this.x > boundaryX) this.x = boundaryX; // Keep within right boundary
-				if (this.y < padding) this.y = padding; // Keep within top padding
-				if (this.y > boundaryY) this.y = boundaryY; // Keep within bottom boundary
-			}
+                if (this.x < padding) this.x = padding; // Keep within left padding
+                if (this.x > boundaryX) this.x = boundaryX; // Keep within right boundary
+                if (this.y < padding) this.y = padding; // Keep within top padding
+                // Removed the check for the bottom boundary
+            }
 
             return this;
         }
@@ -422,6 +485,26 @@
             }
             return color;
         }
+
+        document.getElementById('playButton').addEventListener('click', function() {
+            const rainSound = document.getElementById('rainSound');
+            rainSound.currentTime = 0; // Start from the beginning
+            rainSound.play();
+
+            // Set an interval to pause the sound 2 seconds before it ends
+            const duration = 60; // Assuming the sound is 60 seconds long
+            const pauseAt = duration - 1; 
+
+            rainSound.addEventListener('timeupdate', function() {
+                if (rainSound.currentTime >= pauseAt) {
+                    rainSound.pause();
+                    rainSound.currentTime = 0; // Reset to the start
+                    rainSound.play(); // Play again
+                }
+            });
+
+            this.style.display = 'none'; // Hide the button after playing
+        });
 
         init();
     </script>
