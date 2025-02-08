@@ -170,6 +170,11 @@
             z-index: 1;
         }
 
+        .button.off {
+            background-color: grey; /* Grey when sound is off */
+            color: white;
+        }
+
         .button:hover {
             background-color: #ffd700;
         }
@@ -239,7 +244,7 @@
 <body>
     <div class="rain" id="rain"></div>
     <div class="header">Umineko Waiting Room</div>
-    <button class="button" id="playButton">Play Rain Sounds</button>
+    <button class="button off" id="playButton">Turn On Rain Sounds</button>
     <audio id="rainSound" loop>
         <source src="https://www.soundjay.com/nature/sounds/rain-01.mp3" type="audio/mpeg">
         Your browser does not support the audio element.
@@ -256,6 +261,28 @@
     <div class="calendar" id="timetable"></div>
 
     <script>
+        let isRainSoundPlaying = false;
+
+        document.getElementById('playButton').addEventListener('click', function() {
+            const rainSound = document.getElementById('rainSound');
+
+            if (!isRainSoundPlaying) {
+                rainSound.volume = 0.3; // Set volume to 30%
+                rainSound.play();
+                this.classList.remove('off'); // Change button style to "on"
+                this.style.backgroundColor = 'gold'; // Gold when on
+                this.textContent = 'Turn Off Rain Sounds'; // Change button text
+            } else {
+                rainSound.pause(); // Pause the sound
+                rainSound.currentTime = 0; // Reset to the start
+                this.classList.add('off'); // Change button style to "off"
+                this.style.backgroundColor = 'grey'; // Grey when off
+                this.textContent = 'Turn On Rain Sounds'; // Change button text
+            }
+
+            isRainSoundPlaying = !isRainSoundPlaying; // Toggle the state
+        });
+
         // Rain effect
         function createRain() {
             const rainContainer = document.getElementById('rain');
@@ -312,7 +339,6 @@
                 if (this.x < padding) this.x = padding; // Keep within left padding
                 if (this.x > boundaryX) this.x = boundaryX; // Keep within right boundary
                 if (this.y < padding) this.y = padding; // Keep within top padding
-                // Removed the check for the bottom boundary
             }
 
             return this;
@@ -486,28 +512,8 @@
             return color;
         }
 
-        document.getElementById('playButton').addEventListener('click', function() {
-            const rainSound = document.getElementById('rainSound');
-			rainSound.volume = 0.3; // Set volume to 30%
-            rainSound.currentTime = 0; // Start from the beginning
-            rainSound.play();
-
-            // Set an interval to pause the sound 2 seconds before it ends
-            const duration = 60; // Assuming the sound is 60 seconds long
-            const pauseAt = duration - 1; 
-
-            rainSound.addEventListener('timeupdate', function() {
-                if (rainSound.currentTime >= pauseAt) {
-                    rainSound.pause();
-                    rainSound.currentTime = 0; // Reset to the start
-                    rainSound.play(); // Play again
-                }
-            });
-
-            this.style.display = 'none'; // Hide the button after playing
-        });
-
         init();
     </script>
 </body>
 </html>
+``
