@@ -453,7 +453,7 @@
                 loadingCircle.style.strokeDashoffset = offset;
                 percentageElement.innerHTML = `${percentage.toFixed(5)}%`;
 
-                if (percentage > 5 && butterflies.length === 0) {
+                if (percentage > 0 && butterflies.length === 0) {
                     initButterflies();
                 }
             };
