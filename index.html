@@ -245,10 +245,19 @@
     <div class="rain" id="rain"></div>
     <div class="header">Umineko Waiting Room</div>
     <button class="button off" id="playButton">Turn On Rain Sounds</button>
+
+    <!-- Original audio element -->
     <audio id="rainSound" loop>
         <source src="https://www.soundjay.com/nature/sounds/rain-01.mp3" type="audio/mpeg">
         Your browser does not support the audio element.
     </audio>
+    
+    <!-- New audio element for overlapping sound -->
+    <audio id="rainSoundCopy" loop>
+        <source src="https://www.soundjay.com/nature/sounds/rain-01.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
     <div class="loading-wheel" id="loading-wheel">
         <svg width="500" height="500">
             <circle cx="300" cy="250" r="225" stroke="#ddd" stroke-width="10" fill="none" />
@@ -265,16 +274,22 @@
 
         document.getElementById('playButton').addEventListener('click', function() {
             const rainSound = document.getElementById('rainSound');
+            const rainSoundCopy = document.getElementById('rainSoundCopy');
 
             if (!isRainSoundPlaying) {
                 rainSound.volume = 0.2; // Set volume to 20%
+                rainSoundCopy.volume = 0.2; // Set volume for the copy
                 rainSound.play();
+                rainSoundCopy.currentTime = 5; // Start copy 2 seconds in
+                rainSoundCopy.play();
                 this.classList.remove('off'); // Change button style to "on"
                 this.style.backgroundColor = 'gold'; // Gold when on
                 this.textContent = 'Turn Off Rain Sounds'; // Change button text
             } else {
                 rainSound.pause(); // Pause the sound
                 rainSound.currentTime = 0; // Reset to the start
+                rainSoundCopy.pause(); // Pause the copy
+                rainSoundCopy.currentTime = 0; // Reset to the start
                 this.classList.add('off'); // Change button style to "off"
                 this.style.backgroundColor = 'grey'; // Grey when off
                 this.textContent = 'Turn On Rain Sounds'; // Change button text
@@ -323,8 +338,8 @@
             }
 
             this.moveButterfly = function() {
-                const padding = 20; // Adjust this value for more or less padding
-                const boundaryX = window.innerWidth - 150 - padding; // 100 is the width of the butterfly
+                const padding = 20;
+                const boundaryX = window.innerWidth - 150 - padding;
 
                 this.domElement.style.transform = 'translate3D(' + this.x + 'px, ' + this.y + 'px, 0px) rotate3d(1, 0.5, 0, 110deg)';
                 var randomnumberX = Math.random();
@@ -516,4 +531,3 @@
     </script>
 </body>
 </html>
-``
