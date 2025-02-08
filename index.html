@@ -123,20 +123,19 @@
 
         .last-event {
             margin-top: 20px;
-            font-size: 1.5em; /* Increase font size */
-            color: gold; /* Set text color to gold */
+            font-size: 1.5em;
+            color: gold;
             text-align: center;
         }
 
-        /* Butterfly CSS */
         @keyframes flutter-left {
-            0%   { transform: rotate3d(0, 1, 0, 20deg); }
+            0% { transform: rotate3d(0, 1, 0, 20deg); }
             50% { transform: rotate3d(0, 1, 0, 70deg); }
             100% { transform: rotate3d(0, 1, 0, 20deg); }
         }
 
         @keyframes flutter-right {
-            0%   { transform: rotate3d(0, 1, 0, -20deg); }
+            0% { transform: rotate3d(0, 1, 0, -20deg); }
             50% { transform: rotate3d(0, 1, 0, -70deg); }
             100% { transform: rotate3d(0, 1, 0, -20deg); }
         }
@@ -160,19 +159,13 @@
         .left-wing {
             left: 10px;
             transform-origin: 24px 50%;
-            transform: rotate3d(0, 1, 0, 20deg);
             animation: flutter-left 0.3s infinite;
         }
 
         .right-wing {
             left: 34px;
-            transform: rotate3d(0, 1, 0, -20deg);
             transform-origin: 0px 50%;
             animation: flutter-right 0.3s infinite;
-        }
-
-        .left-wing .top {
-            right: 0;
         }
 
         .top, .bottom {
@@ -223,53 +216,38 @@
         }
 
         function Butterfly() {
-            var _this = this;
+            this.init = function() {
+                this.x = Math.random() * window.innerWidth;
+                this.y = Math.random() * window.innerHeight;
+                this.directionX = Math.random() < 0.5;
+                this.directionY = Math.random() < 0.5;
 
-            _this.init = function() {
-                _this.x = Math.floor(Math.random() * window.innerWidth);
-                _this.y = Math.floor(Math.random() * window.innerHeight);
-                _this.directionX = true;
-                _this.directionY = true;
-
-                _this.domElement = document.createElement('div');
-                _this.domElement.className = 'butterfly';
-                _this.domElement.innerHTML = '<div class="left-wing"><div class="top"></div><div class="bottom"></div></div><div class="right-wing"><div class="top"></div><div class="bottom"></div></div>';
-                document.getElementsByTagName('body')[0].appendChild(_this.domElement);
+                this.domElement = document.createElement('div');
+                this.domElement.className = 'butterfly';
+                this.domElement.innerHTML = '<div class="left-wing"><div class="top"></div><div class="bottom"></div></div><div class="right-wing"><div class="top"></div><div class="bottom"></div></div>';
+                document.body.appendChild(this.domElement);
             }
 
-            _this.moveButterfly = function() {
-                _this.domElement.style.webkitTransform = 'translate3D(' + _this.x + 'px, ' + _this.y + 'px, 0px) rotate3d(1, 0.5, 0, 110deg)';
-                var randomnumberX = Math.floor(Math.random() * 11);
-                var randomnumberY = Math.floor(Math.random() * 11);
-                if (randomnumberX > 8) {
-                    _this.directionX = _this.directionX * -1;
-                }
+            this.moveButterfly = function() {
+                this.domElement.style.transform = 'translate3D(' + this.x + 'px, ' + this.y + 'px, 0px) rotate3d(1, 0.5, 0, 110deg)';
+                var randomnumberX = Math.random();
+                var randomnumberY = Math.random();
+                
+                if (randomnumberX > 0.8) this.directionX = !this.directionX;
+                if (randomnumberY > 0.8) this.directionY = !this.directionY;
 
-                if (randomnumberY > 8) {
-                    _this.directionY = _this.directionY * -1;
-                }
-
-                if (_this.directionX == true) {
-                    _this.x = _this.x + 1;
-                } else {
-                    _this.x = _this.x - 1;
-                }
-
-                if (_this.directionY == true) {
-                    _this.y = _this.y + 1;
-                } else {
-                    _this.y = _this.y - 1;
-                }
+                this.x += this.directionX ? 1 : -1;
+                this.y += this.directionY ? 1 : -1;
             }
 
-            return _this;
+            return this;
         }
 
         function animate() {
-            for (var i = 0, l = butterflies.length; i < l; i++) {
-                butterflies[i].moveButterfly();
-            }
-            webkitRequestAnimationFrame(animate);
+            butterflies.forEach(function(butterfly) {
+                butterfly.moveButterfly();
+            });
+            requestAnimationFrame(animate);
         }
 
         const streamFileUrl = 'https://gist.githubusercontent.com/IshuDivan/27a37e4dc3baa85d5aa1952a215e8567/raw/afd1a5706caf4aea08628b4170feacc03234c51a/schedule.txt';
@@ -297,7 +275,7 @@
 
         function renderTimetable(schedule) {
             const timetable = document.getElementById('timetable');
-            const today = moment.utc(); // Current time in UTC
+            const today = moment.utc(); 
             const categoryColors = {}; 
 
             const startDate = today.clone().subtract(today.day() + 6, 'days');
@@ -313,7 +291,7 @@
                     categoryColors[category] = getRandomColor();
                 }
 
-                const eventDate = moment.utc(date, 'DD.MM.YYYY').set({ hour: 17, minute: 0, second: 0 }); // Changed to 17:00 UTC
+                const eventDate = moment.utc(date, 'DD.MM.YYYY').set({ hour: 17, minute: 0, second: 0 });
                 const isToday = eventDate.isSame(today, 'day'); 
 
                 if (!isToday && eventDate.isBefore(today)) {
@@ -329,12 +307,12 @@
         }
 
         function startCountdown(schedule) {
-            const now = moment.utc(); // Current time in UTC
+            const now = moment.utc(); 
             let targetDate = null;
             let lastEventDate = null;
 
             for (const [date, category] of Object.entries(schedule)) {
-                const eventDate = moment.utc(date, 'DD.MM.YYYY').set({ hour: 17, minute: 0, second: 0 }); // Changed to 17:00 UTC
+                const eventDate = moment.utc(date, 'DD.MM.YYYY').set({ hour: 17, minute: 0, second: 0 });
 
                 if (eventDate.isAfter(now) && category.includes("Umineko")) {
                     targetDate = eventDate;
@@ -374,7 +352,6 @@
                 loadingCircle.style.strokeDashoffset = offset;
                 percentageElement.innerHTML = `${percentage.toFixed(5)}%`;
 
-                // Check percentage for butterfly spawning
                 if (percentage > 5 && butterflies.length === 0) {
                     initButterflies();
                 }
@@ -385,11 +362,11 @@
         }
 
         function updateLastEvent(schedule) {
-            const now = moment.utc(); // Current time in UTC
+            const now = moment.utc(); 
             let lastEventDate = null;
 
             for (const [date, category] of Object.entries(schedule)) {
-                const eventDate = moment.utc(date, 'DD.MM.YYYY').set({ hour: 17, minute: 0, second: 0 }); // Changed to 17:00 UTC
+                const eventDate = moment.utc(date, 'DD.MM.YYYY').set({ hour: 17, minute: 0, second: 0 });
 
                 if (eventDate.isBefore(now) && category.includes("Umineko")) {
                     lastEventDate = eventDate;
@@ -401,7 +378,6 @@
             if (lastEventDate) {
                 const updateLastEventTime = () => {
                     const timeSinceLastEvent = moment.utc().diff(lastEventDate);
-
                     const duration = moment.duration(timeSinceLastEvent);
                     lastEventElement.innerHTML = `Time since last 'Umineko' event: ${duration.days()}d ${duration.hours()}h ${duration.minutes()}m ${duration.seconds()}s`;
                 };
