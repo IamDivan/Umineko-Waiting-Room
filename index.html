@@ -391,13 +391,14 @@
 
         function renderTimetable(schedule) {
             const timetable = document.getElementById('timetable');
-            const today = moment.utc(); 
-            const categoryColors = {}; 
+            const today = moment.utc();
+            const categoryColors = {};
 
-            const startDate = today.clone().subtract(today.day() + 6, 'days');
-            const totalDays = 21; 
-            const weekDates = createCalendarDates(startDate, totalDays);
-
+            // Find the next Sunday
+            const nextSunday = today.clone().day(7); // 7 represents Sunday in moment.js
+            const totalDays = 21; // 21 days including next Sunday
+            const weekDates = createCalendarDates(nextSunday.clone().subtract(20, 'days'), totalDays);
+            
             weekDates.forEach(({ date, weekday }) => {
                 const dayDiv = document.createElement('div');
                 dayDiv.className = 'day';
@@ -408,10 +409,10 @@
                 }
 
                 const eventDate = moment.utc(date, 'DD.MM.YYYY').set({ hour: 17, minute: 0, second: 0 });
-                const isToday = eventDate.isSame(today, 'day'); 
+                const isToday = eventDate.isSame(today, 'day');
 
                 if (!isToday && eventDate.isBefore(today)) {
-                    dayDiv.classList.add('past-day'); 
+                    dayDiv.classList.add('past-day');
                 }
 
                 dayDiv.innerHTML = `
