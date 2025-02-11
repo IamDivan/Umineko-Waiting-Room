@@ -412,7 +412,6 @@
 			const today = moment.utc();
 			const categoryColors = {};
 
-			// Array of categories with corresponding links and pop-up text
 			const categoryLinks = [
 				["No streams", "https://www.youtube.com/watch?v=bsH-QDlSeWk&list=PLBd_FoFE8OGegkkphN-bwzehUfCpPaYg9&ab_channel=NonOfficialDaily%28ish%29JosephAnderson", "No Upcoming Streams"],
 				["Persona 3:Reload", "https://www.youtube.com/playlist?list=PL1bauNEiHIgx0PbuWqpvWLds4uHCrVERM", "I'drwNLpSAP"],
@@ -431,27 +430,26 @@
 					categoryColors[category] = getRandomColor();
 				}
 
-				// Find the corresponding link and pop-up text for the category
 				const categoryLink = categoryLinks.find(item => item[0] === category);
 				const link = categoryLink ? categoryLink[1] : "https://www.twitch.tv/andersonjph";
 				const tooltipText = categoryLink ? categoryLink[2] : "No Upcoming Streams";
 
 				const eventDate = moment.utc(date, 'DD.MM.YYYY').set({ hour: 17 });
 				const isToday = eventDate.isSame(today, 'day');
+				const isPast17 = eventDate.isBefore(today) || (isToday && today.hour() >= 17);
 
 				const dayDiv = document.createElement('div');
-				dayDiv.className = 'day' + (eventDate.isBefore(today) && !isToday ? ' past-day' : '');
+				dayDiv.className = 'day' + (isPast17 ? ' past-day' : '');
 
 				dayDiv.innerHTML = `
 					<div class="day-header" style="background-color: ${categoryColors[category]}">${weekday} <span class="date">${date}</span></div>
 					<div class="category">${category}</div>
-					${category !== 'No streams' ? '<div class="category">at 17:00 UTC</div>' : ''}
+					${category !== 'No streams' ? '<div class="category">At 17:00 UTC</div>' : ''}
 					<div class="tooltip" style="display:none; position:absolute;">
 						<a href="${link}" target="_blank" style="color: white;">${tooltipText}</a>
 					</div>
 				`;
 
-				// Event listener to show the tooltip on hover
 				dayDiv.addEventListener('mouseenter', function() {
 					const tooltip = dayDiv.querySelector('.tooltip');
 					tooltip.style.display = 'block';
