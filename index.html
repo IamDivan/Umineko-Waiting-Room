@@ -408,63 +408,62 @@
         }
 
 		function renderTimetable(schedule) {
-            const timetable = document.getElementById('timetable');
-            const today = moment.utc();
-            const categoryColors = {};
+			const timetable = document.getElementById('timetable');
+			const today = moment.utc();
+			const categoryColors = {};
 
-            // Array of categories with corresponding links and pop-up text
-            const categoryLinks = [
-                ["No streams", "https://www.youtube.com/watch?v=bsH-QDlSeWk&list=PLBd_FoFE8OGegkkphN-bwzehUfCpPaYg9&ab_channel=NonOfficialDaily%28ish%29JosephAnderson", "No Upcoming Streams"],
-                ["Persona 3:Reload", "https://www.youtube.com/playlist?list=PL1bauNEiHIgx0PbuWqpvWLds4uHCrVERM", "I'drwNLpSAP"],
-                ["Umineko", "https://www.twitch.tv/andersonjph", "Click me"]
-                // Add more categories and links here as needed
-            ];
+			// Array of categories with corresponding links and pop-up text
+			const categoryLinks = [
+				["No streams", "https://www.youtube.com/watch?v=bsH-QDlSeWk&list=PLBd_FoFE8OGegkkphN-bwzehUfCpPaYg9&ab_channel=NonOfficialDaily%28ish%29JosephAnderson", "No Upcoming Streams"],
+				["Persona 3:Reload", "https://www.youtube.com/playlist?list=PL1bauNEiHIgx0PbuWqpvWLds4uHCrVERM", "I'drwNLpSAP"],
+				["Umineko", "https://www.twitch.tv/andersonjph", "Click me"]
+			];
 
-            let nextNextSunday = today.clone();
-            nextNextSunday.day(nextNextSunday.day() === 0 ? 14 : 14);
+			let nextNextSunday = today.clone();
+			nextNextSunday.day(nextNextSunday.day() === 0 ? 14 : 14);
 
-            const startDate = nextNextSunday.clone().subtract(20, 'days');
-            const weekDates = createCalendarDates(startDate, 21);
+			const startDate = nextNextSunday.clone().subtract(20, 'days');
+			const weekDates = createCalendarDates(startDate, 21);
 
-            weekDates.forEach(({ date, weekday }) => {
-                const category = schedule[date] || 'No streams';
-                if (!categoryColors[category]) {
-                    categoryColors[category] = getRandomColor();
-                }
+			weekDates.forEach(({ date, weekday }) => {
+				const category = schedule[date] || 'No streams';
+				if (!categoryColors[category]) {
+					categoryColors[category] = getRandomColor();
+				}
 
-                // Find the corresponding link and pop-up text for the category
-                const categoryLink = categoryLinks.find(item => item[0] === category);
-                const link = categoryLink ? categoryLink[1] : "https://www.twitch.tv/andersonjph";
-                const tooltipText = categoryLink ? categoryLink[2] : "No Upcoming Streams";
+				// Find the corresponding link and pop-up text for the category
+				const categoryLink = categoryLinks.find(item => item[0] === category);
+				const link = categoryLink ? categoryLink[1] : "https://www.twitch.tv/andersonjph";
+				const tooltipText = categoryLink ? categoryLink[2] : "No Upcoming Streams";
 
-                const eventDate = moment.utc(date, 'DD.MM.YYYY').set({ hour: 17 });
-                const isToday = eventDate.isSame(today, 'day');
+				const eventDate = moment.utc(date, 'DD.MM.YYYY').set({ hour: 17 });
+				const isToday = eventDate.isSame(today, 'day');
 
-                const dayDiv = document.createElement('div');
-                dayDiv.className = 'day' + (eventDate.isBefore(today) && !isToday ? ' past-day' : '');
+				const dayDiv = document.createElement('div');
+				dayDiv.className = 'day' + (eventDate.isBefore(today) && !isToday ? ' past-day' : '');
 
-                dayDiv.innerHTML = `
-                    <div class="day-header" style="background-color: ${categoryColors[category]}">${weekday} <span class="date">${date}</span></div>
-                    <div class="category">${category}</div>
-					<div class="category">At 17:00 UTC</div>
-                    <div class="tooltip" style="display:none; position:absolute;">
-                        <a href="${link}" target="_blank" style="color: white;">${tooltipText}</a>
-                    </div>
-                `;
+				dayDiv.innerHTML = `
+					<div class="day-header" style="background-color: ${categoryColors[category]}">${weekday} <span class="date">${date}</span></div>
+					<div class="category">${category}</div>
+					${category !== 'No streams' ? '<div class="category">At 17:00 UTC</div>' : ''}
+					<div class="tooltip" style="display:none; position:absolute;">
+						<a href="${link}" target="_blank" style="color: white;">${tooltipText}</a>
+					</div>
+				`;
 
-                // Event listener to show the tooltip on hover
-                dayDiv.addEventListener('mouseenter', function() {
-                    const tooltip = dayDiv.querySelector('.tooltip');
-                    tooltip.style.display = 'block';
-                });
-                dayDiv.addEventListener('mouseleave', function() {
-                    const tooltip = dayDiv.querySelector('.tooltip');
-                    tooltip.style.display = 'none';
-                });
+				// Event listener to show the tooltip on hover
+				dayDiv.addEventListener('mouseenter', function() {
+					const tooltip = dayDiv.querySelector('.tooltip');
+					tooltip.style.display = 'block';
+				});
+				dayDiv.addEventListener('mouseleave', function() {
+					const tooltip = dayDiv.querySelector('.tooltip');
+					tooltip.style.display = 'none';
+				});
 
-                timetable.appendChild(dayDiv);
-            });
-        }    
+				timetable.appendChild(dayDiv);
+			});
+		}
         function startCountdown(schedule) {
             const now = moment.utc(); 
             let targetDate = null;
