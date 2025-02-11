@@ -390,38 +390,46 @@
         }
 
         function renderTimetable(schedule) {
-            const timetable = document.getElementById('timetable');
-            const today = moment.utc();
-            const categoryColors = {};
+			const timetable = document.getElementById('timetable');
+			const today = moment.utc();
+			const categoryColors = {};
 
-            // Find the next Sunday
-            const nextSunday = today.clone().day(7); // 7 represents Sunday in moment.js
-            const totalDays = 21; // 21 days including next Sunday
-            const weekDates = createCalendarDates(nextSunday.clone().subtract(20, 'days'), totalDays);
-            
-            weekDates.forEach(({ date, weekday }) => {
-                const dayDiv = document.createElement('div');
-                dayDiv.className = 'day';
-                const category = schedule[date] || 'No streams';
+			let nextSunday = today.clone();
+			if (nextSunday.day() === 0) {
+				nextSunday.add(7, 'days');
+			} else {
+				nextSunday.day(7); 
+			}
 
-                if (!categoryColors[category]) {
-                    categoryColors[category] = getRandomColor();
-                }
+			let nextNextSunday = nextSunday.clone().add(7, 'days'); 
 
-                const eventDate = moment.utc(date, 'DD.MM.YYYY').set({ hour: 17, minute: 0, second: 0 });
-                const isToday = eventDate.isSame(today, 'day');
+			// Create a date range of 21 days ending on the next next Sunday
+			const startDate = nextNextSunday.clone().subtract(20, 'days');
+			const weekDates = createCalendarDates(startDate, 21); // 21 days total
 
-                if (!isToday && eventDate.isBefore(today)) {
-                    dayDiv.classList.add('past-day');
-                }
+			weekDates.forEach(({ date, weekday }) => {
+				const dayDiv = document.createElement('div');
+				dayDiv.className = 'day';
+				const category = schedule[date] || 'No streams';
 
-                dayDiv.innerHTML = `
-                    <div class="day-header" style="background-color: ${categoryColors[category]}">${weekday} <span class="date">${date}</span></div>
-                    <div class="category">${category}</div>
-                `;
-                timetable.appendChild(dayDiv);
-            });
-        }
+				if (!categoryColors[category]) {
+					categoryColors[category] = getRandomColor();
+				}
+
+				const eventDate = moment.utc(date, 'DD.MM.YYYY').set({ hour: 17, minute: 0, second: 0 });
+				const isToday = eventDate.isSame(today, 'day');
+
+				if (!isToday && eventDate.isBefore(today)) {
+					dayDiv.classList.add('past-day');
+				}
+
+				dayDiv.innerHTML = `
+					<div class="day-header" style="background-color: ${categoryColors[category]}">${weekday} <span class="date">${date}</span></div>
+					<div class="category">${category}</div>
+				`;
+				timetable.appendChild(dayDiv);
+			});
+		}
 
         function startCountdown(schedule) {
             const now = moment.utc(); 
