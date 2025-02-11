@@ -64,20 +64,21 @@
         }
 
         .day {
-            border-radius: 10px;
-            padding: 15px;
-            text-align: center;
-            background-color: white;
-            color: black;
-            position: relative;
-            height: 150px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-            transition: transform 0.2s;
-            z-index: 1;
-        }
+			border-radius: 10px;
+			padding: 15px;
+			text-align: center;
+			background-color: white;
+			color: black;
+			position: relative;
+			height: 150px;
+			box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+			transition: transform 0.2s;
+			z-index: 1; /* Keep day z-index lower */
+		}
 
         .day:hover {
             transform: scale(1.05);
+			z-index: 2;
         }
 
         .day-header {
@@ -237,6 +238,23 @@
             height: 24px;
             border-radius: 12px;
         }
+
+        .tooltip {
+			position: absolute;
+			background-color: #333;
+			color: white;
+			border-radius: 5px;
+			padding: 10px;
+			visibility: hidden;
+			opacity: 0;
+			transition: visibility 0s, opacity 0.5s linear;
+			z-index: 100; /* Increased z-index to ensure it appears above other elements */
+		}
+
+        .day:hover .tooltip {
+            visibility: visible;
+            opacity: 1;
+        }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.34/moment-timezone-with-data.min.js"></script>
@@ -277,7 +295,7 @@
             const rainSoundCopy = document.getElementById('rainSoundCopy');
 
             if (!isRainSoundPlaying) {
-                rainSound.volume = 0.05; // Set volume to 15%
+                rainSound.volume = 0.05; // Set volume to 5%
                 rainSoundCopy.volume = 0.05; // Set volume for the copy
                 rainSound.play();
                 rainSoundCopy.currentTime = 5; // Start copy 2 seconds in
@@ -389,48 +407,63 @@
             return dates;
         }
 
-        function renderTimetable(schedule) {
-			const timetable = document.getElementById('timetable');
-			const today = moment.utc();
-			const categoryColors = {};
+		function renderTimetable(schedule) {
+            const timetable = document.getElementById('timetable');
+            const today = moment.utc();
+            const categoryColors = {};
 
-			let nextSunday = today.clone();
-			if (nextSunday.day() === 0) {
-				nextSunday.add(7, 'days');
-			} else {
-				nextSunday.day(7); 
-			}
+            // Array of categories with corresponding links and pop-up text
+            const categoryLinks = [
+                ["No streams", "https://www.youtube.com/watch?v=bsH-QDlSeWk&list=PLBd_FoFE8OGegkkphN-bwzehUfCpPaYg9&ab_channel=NonOfficialDaily%28ish%29JosephAnderson", "No Upcoming Streams"],
+                ["Persona 3:Reload", "https://www.youtube.com/playlist?list=PL1bauNEiHIgx0PbuWqpvWLds4uHCrVERM", "I'drwNLpSAP"],
+                ["Umineko", "https://www.twitch.tv/andersonjph", "Click me"]
+                // Add more categories and links here as needed
+            ];
 
-			let nextNextSunday = nextSunday.clone().add(7, 'days'); 
+            let nextNextSunday = today.clone();
+            nextNextSunday.day(nextNextSunday.day() === 0 ? 14 : 14);
 
-			// Create a date range of 21 days ending on the next next Sunday
-			const startDate = nextNextSunday.clone().subtract(20, 'days');
-			const weekDates = createCalendarDates(startDate, 21); // 21 days total
+            const startDate = nextNextSunday.clone().subtract(20, 'days');
+            const weekDates = createCalendarDates(startDate, 21);
 
-			weekDates.forEach(({ date, weekday }) => {
-				const dayDiv = document.createElement('div');
-				dayDiv.className = 'day';
-				const category = schedule[date] || 'No streams';
+            weekDates.forEach(({ date, weekday }) => {
+                const category = schedule[date] || 'No streams';
+                if (!categoryColors[category]) {
+                    categoryColors[category] = getRandomColor();
+                }
 
-				if (!categoryColors[category]) {
-					categoryColors[category] = getRandomColor();
-				}
+                // Find the corresponding link and pop-up text for the category
+                const categoryLink = categoryLinks.find(item => item[0] === category);
+                const link = categoryLink ? categoryLink[1] : "https://www.twitch.tv/andersonjph";
+                const tooltipText = categoryLink ? categoryLink[2] : "No Upcoming Streams";
 
-				const eventDate = moment.utc(date, 'DD.MM.YYYY').set({ hour: 17, minute: 0, second: 0 });
-				const isToday = eventDate.isSame(today, 'day');
+                const eventDate = moment.utc(date, 'DD.MM.YYYY').set({ hour: 17 });
+                const isToday = eventDate.isSame(today, 'day');
 
-				if (!isToday && eventDate.isBefore(today)) {
-					dayDiv.classList.add('past-day');
-				}
+                const dayDiv = document.createElement('div');
+                dayDiv.className = 'day' + (eventDate.isBefore(today) && !isToday ? ' past-day' : '');
 
-				dayDiv.innerHTML = `
-					<div class="day-header" style="background-color: ${categoryColors[category]}">${weekday} <span class="date">${date}</span></div>
-					<div class="category">${category}</div>
-				`;
-				timetable.appendChild(dayDiv);
-			});
-		}
+                dayDiv.innerHTML = `
+                    <div class="day-header" style="background-color: ${categoryColors[category]}">${weekday} <span class="date">${date}</span></div>
+                    <div class="category">${category}</div>
+                    <div class="tooltip" style="display:none; position:absolute;">
+                        <a href="${link}" target="_blank" style="color: white;">${tooltipText}</a>
+                    </div>
+                `;
 
+                // Event listener to show the tooltip on hover
+                dayDiv.addEventListener('mouseenter', function() {
+                    const tooltip = dayDiv.querySelector('.tooltip');
+                    tooltip.style.display = 'block';
+                });
+                dayDiv.addEventListener('mouseleave', function() {
+                    const tooltip = dayDiv.querySelector('.tooltip');
+                    tooltip.style.display = 'none';
+                });
+
+                timetable.appendChild(dayDiv);
+            });
+        }    
         function startCountdown(schedule) {
             const now = moment.utc(); 
             let targetDate = null;
@@ -473,7 +506,7 @@
 
                 const elapsedTime = moment.utc().diff(lastEventDate);
                 const percentage = Math.min((elapsedTime / totalDuration) * 100, 100);
-                const offset = 1413 - (percentage / 100) * 1413;
+				const offset = 1413 - (percentage / 100) * 1413;
                 loadingCircle.style.strokeDashoffset = offset;
                 percentageElement.innerHTML = `${percentage.toFixed(5)}%`;
 
