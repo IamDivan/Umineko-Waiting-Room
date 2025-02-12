@@ -9,6 +9,7 @@
         @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap');
 
         body {
+			user-select: none;
             font-family: 'Arial', sans-serif;
             margin: 0;
             background-color: #111;
@@ -20,6 +21,28 @@
             overflow-y: auto;
             position: relative;
         }
+		.selectable {
+			user-select: text; /* Allow text selection when this class is applied */
+		}
+		#clearButton {
+			position: absolute;
+			top: 10px;
+			left: 10px;
+			z-index: 1;
+			padding: 10px 20px;
+			font-size: 20px;
+			font-family: 'Roboto', sans-serif;
+			color: red;
+			background: transparent;
+			border: 2px solid red;
+			border-radius: 5px;
+			transition: background 0.3s, color 0.3s;
+		}
+
+		#clearButton:hover {
+			background: rgba(255, 0, 0, 0.1);
+			color: darkred;
+		}
 		#days-since-last-event {
 			font-family: 'Times New Roman', serif;
 			color: white;
@@ -216,6 +239,7 @@
             top: 0; bottom: 0; left: 0; right: 0;
             transform-style: preserve-3d;
             transform: rotate3d(1, 0.5, 0, 110deg);
+			cursor: grab;
         }
 
         .left-wing, .right-wing {
@@ -285,6 +309,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.34/moment-timezone-with-data.min.js"></script>
 </head>
 <body>
+	<button id="clearButton" style="position: absolute; top: 10px; left: 10px; z-index: 1;">
+		Magic isn't real
+	</button>
     <div class="rain" id="rain"></div>
     <div class="header">Umineko Waiting Room</div>
     <button class="button off" id="playButton">Turn On Rain Sounds</button>
@@ -318,6 +345,48 @@
     <div class="calendar" id="timetable"></div>
 
     <script>
+		
+		document.querySelectorAll('body *').forEach(element => {
+			element.addEventListener('click', function() {
+				// Remove the selectable class from all elements
+				document.querySelectorAll('body *').forEach(el => el.classList.remove('selectable'));
+				
+				// Add the selectable class to the clicked element
+				this.classList.add('selectable');
+
+				// Select the text inside the clicked element
+				const range = document.createRange();
+				range.selectNodeContents(this);
+				const selection = window.getSelection();
+				selection.removeAllRanges();
+				selection.addRange(range);
+			});
+		});
+		function clearSelection() {
+			document.querySelectorAll('body *').forEach(el => el.classList.remove('selectable'));
+			const selection = window.getSelection();
+			selection.removeAllRanges();
+		}
+
+		// Click event on the body to clear selection
+		document.body.addEventListener('click', function(event) {
+			// Clear the selection if clicking on empty space
+			if (event.target === document.body) {
+				clearSelection();
+			} else {
+				// If clicking on an element, clear and select that element
+				clearSelection();
+				event.target.classList.add('selectable');
+
+				// Select the text inside the clicked element
+				const range = document.createRange();
+				range.selectNodeContents(event.target);
+				const selection = window.getSelection();
+				selection.removeAllRanges();
+				selection.addRange(range);
+			}
+		});
+	
         let isRainSoundPlaying = false;
 
         document.getElementById('playButton').addEventListener('click', function() {
@@ -361,23 +430,29 @@
 
         createRain();
 
-        var butterflies = [];
+       var butterflies = [];
 
-        function initButterflies() {
-            for (var i = 0; i < 20; i++) {
-                var b = new Butterfly();
-                b.init();
-                butterflies.push(b);
-            }
-            animate();
+		function initButterflies() {
+			spawnButterfly();
+		}
+
+		function spawnButterfly() {
+            var b = new Butterfly();
+            b.init();
+            butterflies.push(b);
+
+            // Randomly schedule despawning the butterfly
+            const despawnTime = Math.random() * (25 - 15) + 15; // Random time between 15 and 25 seconds
+            setTimeout(() => {
+                b.domElement.remove(); // Remove the butterfly from the DOM
+                butterflies = butterflies.filter(butterfly => butterfly !== b); // Remove from array
+                spawnButterfly(); // Spawn a new butterfly
+            }, despawnTime * 1000); // Convert to milliseconds
         }
-
-        function Butterfly() {
+		function Butterfly() {
             this.init = function() {
                 this.x = Math.random() * window.innerWidth;
                 this.y = Math.random() * window.innerHeight;
-                this.directionX = Math.random() < 0.5;
-                this.directionY = Math.random() < 0.5;
 
                 this.domElement = document.createElement('div');
                 this.domElement.className = 'butterfly';
@@ -385,36 +460,89 @@
                 document.body.appendChild(this.domElement);
             }
 
-            this.moveButterfly = function() {
-                const padding = 20;
-                const boundaryX = window.innerWidth - 150 - padding;
+			this.moveButterfly = function() {
+				const padding = 20;
+				const boundaryX = window.innerWidth - 150 - padding;
 
-                this.domElement.style.transform = 'translate3D(' + this.x + 'px, ' + this.y + 'px, 0px) rotate3d(1, 0.5, 0, 110deg)';
-                var randomnumberX = Math.random();
-                var randomnumberY = Math.random();
-                
-                if (randomnumberX > 0.8) this.directionX = !this.directionX;
-                if (randomnumberY > 0.8) this.directionY = !this.directionY;
+				this.domElement.style.transform = 'translate3D(' + this.x + 'px, ' + this.y + 'px, 0px) rotate3d(1, 0.5, 0, 110deg)';
+				
+				var randomnumberX = Math.random();
+				var randomnumberY = Math.random();
+				
+				if (randomnumberX > 0.8) this.directionX = !this.directionX;
+				if (randomnumberY > 0.8) this.directionY = !this.directionY;
 
-                this.x += this.directionX ? 1 : -1;
-                this.y += this.directionY ? 1 : -1;
+				this.x += this.directionX ? 1 : -1;
+				this.y += this.directionY ? 1 : -1;
 
-                if (this.x < padding) this.x = padding; // Keep within left padding
-                if (this.x > boundaryX) this.x = boundaryX; // Keep within right boundary
-                if (this.y < padding) this.y = padding; // Keep within top padding
-            }
+				if (this.x < padding) this.x = padding; // Keep within left padding
+				if (this.x > boundaryX) this.x = boundaryX; // Keep within right boundary
+				if (this.y < padding) this.y = padding; // Keep within top padding
+			}
+		}
 
-            return this;
-        }
+		function animate() {
+			butterflies.forEach(function(butterfly) {
+				butterfly.moveButterfly();
+			});
+			requestAnimationFrame(animate);
+		}
 
-        function animate() {
-            butterflies.forEach(function(butterfly) {
-                butterfly.moveButterfly();
+		// Start the butterfly animation
+		initButterflies();
+		animate();
+
+		let isMousePressed = false;
+
+		document.addEventListener('mousedown', function(event) {
+			isMousePressed = true;
+			createButterflyAt(event.pageX, event.pageY); // Use pageX and pageY
+		});
+
+		document.addEventListener('mouseup', function() {
+			isMousePressed = false;
+		});
+
+		document.addEventListener('mousemove', function(event) {
+			if (isMousePressed) {
+				createButterflyAt(event.pageX, event.pageY); // Use pageX and pageY
+			}
+		});
+		document.getElementById('clearButton').addEventListener('click', clearAllButterflies);
+		function clearAllButterflies() {
+            butterflies.forEach(butterfly => {
+                butterfly.domElement.remove(); // Remove from DOM
             });
-            requestAnimationFrame(animate);
+            butterflies = []; // Clear the array
         }
+		function createButterflyAt(x, y) {
+			const butterfly = new Butterfly();
+			butterfly.init();
+			butterfly.x = x;
+			butterfly.y = y;
+			butterfly.moveButterfly();
+			butterflies.push(butterfly);
+		}
 
-        const streamFileUrl = 'https://gist.githubusercontent.com/IamDivan/2920baf2d5e1d87c4fd5d00f41c18db1/raw/def1512378612625ea99b514a58ef7f73cdd5cb3/gistfile1.txt';
+		// Modify the Butterfly class to set position
+		Butterfly.prototype.moveButterfly = function() {
+			const padding = 20;
+			const boundaryX = window.innerWidth - 150 - padding;
+
+			this.domElement.style.transform = 'translate3D(' + this.x + 'px, ' + this.y + 'px, 0px) rotate3d(1, 0.5, 0, 110deg)';
+			
+			// Optional: Add random movement to the butterflies
+			this.x += (Math.random() > 0.5 ? 1 : -1) * (Math.random() * 2);
+			this.y += (Math.random() > 0.5 ? 1 : -1) * (Math.random() * 2);
+
+			// Keep within boundaries
+			if (this.x < padding) this.x = padding;
+			if (this.x > boundaryX) this.x = boundaryX;
+			if (this.y < padding) this.y = padding;
+			if (this.y > window.innerHeight - padding) this.y = window.innerHeight - padding;
+		}
+
+        const streamFileUrl = 'https://raw.githubusercontent.com/IamDivan/Umineko-Waiting-Room/main/Timetable.txt';
 
         async function fetchStreamSchedule() {
             const response = await fetch(streamFileUrl);
@@ -445,7 +573,8 @@
 			const categoryLinks = [
 				["No streams", "https://www.youtube.com/watch?v=bsH-QDlSeWk&list=PLBd_FoFE8OGegkkphN-bwzehUfCpPaYg9&ab_channel=NonOfficialDaily%28ish%29JosephAnderson", "No Upcoming Streams"],
 				["Persona 3:Reload", "https://www.youtube.com/playlist?list=PL1bauNEiHIgx0PbuWqpvWLds4uHCrVERM", "I'drwNLpSAP"],
-				["Umineko", "https://www.twitch.tv/andersonjph", "Click me"]
+				["Umineko", "https://www.twitch.tv/andersonjph", "Click me"],
+				["Umineko with @._mouse", "https://www.youtube.com/watch?v=OXQwx1EolD8&ab_channel=JGWentworthh", "Who is Mouse?"]
 			];
 
 			let nextNextSunday = today.clone();
@@ -618,6 +747,7 @@
         }
 
         init();
+		initButterflies();
     </script>
 </body>
 </html>
