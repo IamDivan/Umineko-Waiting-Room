@@ -42,6 +42,26 @@
             color: darkred;
         }
 
+        #copyButton {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 1;
+            padding: 10px 20px;
+            font-size: 20px;
+            font-family: 'Roboto', sans-serif;
+            color: white;
+            background: transparent;
+            border: 2px solid gold;
+            border-radius: 5px;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        #copyButton:hover {
+            background: rgba(255, 215, 0, 0.2);
+            color: gold;
+        }
+
         #days-since-last-event {
             font-family: 'Times New Roman', serif;
             color: white;
@@ -310,6 +330,7 @@
 </head>
 <body>
     <button id="clearButton">Magic isn't real</button>
+    <button id="copyButton">Copy Countdown</button>
     <div class="rain" id="rain"></div>
     <div class="header">Umineko Waiting Room</div>
     <button class="button off" id="playButton">Turn On Rain Sounds</button>
@@ -366,6 +387,19 @@
             }
 
             isRainSoundPlaying = !isRainSoundPlaying; // Toggle the state
+        });
+
+        // Copy countdown and percentage to clipboard
+        document.getElementById('copyButton').addEventListener('click', function() {
+            const countdownText = document.getElementById('countdown').textContent;
+            const percentageText = document.getElementById('percentage').textContent;
+            const combinedText = `${countdownText} - ${percentageText}`;
+
+            navigator.clipboard.writeText(combinedText).then(() => {
+                alert('Copied to clipboard: ' + combinedText);
+            }).catch(err => {
+                console.error('Could not copy text: ', err);
+            });
         });
 
         // Rain effect
