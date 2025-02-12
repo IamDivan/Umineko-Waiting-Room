@@ -20,7 +20,23 @@
             overflow-y: auto;
             position: relative;
         }
-
+		#days-since-last-event {
+			font-family: 'Times New Roman', serif;
+			color: white;
+			font-size: 1.5em;
+			margin-top: 10px; /* Adjust the margin as needed */
+			text-align: center; /* Center the text */
+		}
+		
+		#current-date {
+			font-family: 'Georgia Bold', serif;
+			color: white;
+			font-size: 2.5em; /* Adjust the font size as needed */
+			font-weight: bold; /* Make the font bold */
+			margin-top: 7px; /* Adjust the margin as needed */
+			text-align: center; /* Center the text */
+		}
+		
         .rain {
             position: absolute;
             top: 0;
@@ -152,6 +168,7 @@
         }
 
         .last-event {
+            font-family: 'Microsoft JhengHei Light', cursive;
             margin-top: 20px;
             font-size: 1.5em;
             color: gold;
@@ -255,6 +272,14 @@
             visibility: visible;
             opacity: 1;
         }
+		#current-date-jp {
+			font-family: 'Microsoft JhengHei Light', sans-serif; /* Note: requires a purchase or license */
+			color: white;
+			font-size: 1.75em; /* Adjust the font size as needed */
+			margin-top: 6px; /* Adjust the margin as needed */
+			margin-bottom: 100px; /* Adjust the margin as needed */
+			text-align: center; /* Center the text */
+		}
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.34/moment-timezone-with-data.min.js"></script>
@@ -284,6 +309,11 @@
             <text id="percentage" x="300" y="290" fill="#FF5722" font-size="2em" text-anchor="middle" dominant-baseline="middle">0%</text>
         </svg>
     </div>
+	
+	<div id="days-since-last-event" class="last-event"></div>
+	<div id="current-date" class="last-event"></div>
+	<div id="current-date-jp" class="last-event"></div>
+	
     <div class="last-event" id="last-event"></div>
     <div class="calendar" id="timetable"></div>
 
@@ -463,59 +493,69 @@
 			});
 		}
         function startCountdown(schedule) {
-            const now = moment.utc(); 
-            let targetDate = null;
-            let lastEventDate = null;
+			const now = moment.utc(); 
+			let targetDate = null;
+			let lastEventDate = null;
 
-            for (const [date, category] of Object.entries(schedule)) {
-                const eventDate = moment.utc(date, 'DD.MM.YYYY').set({ hour: 17, minute: 0, second: 0 });
+			for (const [date, category] of Object.entries(schedule)) {
+				const eventDate = moment.utc(date, 'DD.MM.YYYY').set({ hour: 17, minute: 0, second: 0 });
 
-                if (eventDate.isAfter(now) && category.includes("Umineko")) {
-                    targetDate = eventDate;
-                    break;
-                }
+				if (eventDate.isAfter(now) && category.includes("Umineko")) {
+					targetDate = eventDate;
+					break;
+				}
 
-                if (eventDate.isBefore(now) && category.includes("Umineko")) {
-                    lastEventDate = eventDate;
-                }
-            }
+				if (eventDate.isBefore(now) && category.includes("Umineko")) {
+					lastEventDate = eventDate;
+				}
+			}
 
-            if (!targetDate) {
-                document.getElementById('countdown').innerHTML = "No upcoming 'Umineko' events found.";
-                return;
-            }
+			if (!targetDate) {
+				document.getElementById('countdown').innerHTML = "No upcoming 'Umineko' events found.";
+				return;
+			}
 
-            const countdownElement = document.getElementById('countdown');
-            const loadingCircle = document.getElementById('progress-circle');
-            const percentageElement = document.getElementById('percentage');
-            const totalDuration = targetDate.diff(lastEventDate);
+			const countdownElement = document.getElementById('countdown');
+			const loadingCircle = document.getElementById('progress-circle');
+			const percentageElement = document.getElementById('percentage');
+			const totalDuration = targetDate.diff(lastEventDate);
 
-            const updateCountdown = () => {
-                const remainingTime = targetDate.diff(moment.utc());
+			const updateCountdown = () => {
+				const remainingTime = targetDate.diff(moment.utc());
 
-                if (remainingTime < 0) {
-                    countdownElement.innerHTML = "Event has started!";
-                    clearInterval(interval);
-                    return;
-                }
+				if (remainingTime < 0) {
+					countdownElement.innerHTML = "Event has started!";
+					clearInterval(interval);
+					return;
+				}
 
-                const duration = moment.duration(remainingTime);
-                countdownElement.innerHTML = `${duration.days()}d ${duration.hours()}h ${duration.minutes()}m ${duration.seconds()}s`;
+				const duration = moment.duration(remainingTime);
+				countdownElement.innerHTML = `${duration.days()}d ${duration.hours()}h ${duration.minutes()}m ${duration.seconds()}s`;
 
-                const elapsedTime = moment.utc().diff(lastEventDate);
-                const percentage = Math.min((elapsedTime / totalDuration) * 100, 100);
+				const elapsedTime = moment.utc().diff(lastEventDate);
+				const percentage = Math.min((elapsedTime / totalDuration) * 100, 100);
 				const offset = 1413 - (percentage / 100) * 1413;
-                loadingCircle.style.strokeDashoffset = offset;
-                percentageElement.innerHTML = `${percentage.toFixed(5)}%`;
+				loadingCircle.style.strokeDashoffset = offset;
+				percentageElement.innerHTML = `${percentage.toFixed(5)}%`;
 
-                if (percentage > 0 && butterflies.length === 0) {
-                    initButterflies();
-                }
-            };
+				// Calculate days since last event and update the text
+				const daysSinceLastEvent = moment.utc().diff(lastEventDate, 'days');
+				const dayText = daysSinceLastEvent === 0 ? "The First Day" :
+								daysSinceLastEvent === 1 ? "The Second Day" :
+								daysSinceLastEvent === 2 ? "The Third Day" :
+								daysSinceLastEvent === 3 ? "The Fourth Day" :
+								`${daysSinceLastEvent + 1} day`;
 
-            updateCountdown();
-            const interval = setInterval(updateCountdown, 1000);
-        }
+				document.getElementById('days-since-last-event').innerHTML = dayText;
+
+				if (percentage > 0 && butterflies.length === 0) {
+					initButterflies();
+				}
+			};
+
+			updateCountdown();
+			const interval = setInterval(updateCountdown, 1000);
+		}
 
         function updateLastEvent(schedule) {
             const now = moment.utc(); 
@@ -544,19 +584,29 @@
                 lastEventElement.innerHTML = "No past 'Umineko' events found.";
             }
         }
+		
+		function displayCurrentDate() {
+			const today = moment.utc();
+			const formattedDate = today.format('MMMM Do, YYYY'); // English format
+			const formattedDateJP = today.locale('ja').format('YYYY年M月D日'); // Japanese format
+
+			document.getElementById('current-date').innerHTML = formattedDate;
+			document.getElementById('current-date-jp').innerHTML = formattedDateJP;
+		}
 
         async function init() {
-            try {
-                const schedule = await fetchStreamSchedule();
-                renderTimetable(schedule);
-                startCountdown(schedule);
-                updateLastEvent(schedule);
-            } catch (error) {
-                console.error('Error fetching stream schedule:', error);
-                const timetable = document.getElementById('timetable');
-                timetable.innerHTML = '<div class="day">Failed to load schedule</div>';
-            }
-        }
+			try {
+				const schedule = await fetchStreamSchedule();
+				renderTimetable(schedule);
+				startCountdown(schedule);
+				updateLastEvent(schedule);
+				displayCurrentDate(); // Call to display the current date
+			} catch (error) {
+				console.error('Error fetching stream schedule:', error);
+				const timetable = document.getElementById('timetable');
+				timetable.innerHTML = '<div class="day">Failed to load schedule</div>';
+			}
+		}
 
         function getRandomColor() {
             const letters = '0123456789ABCDEF';
