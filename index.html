@@ -9,7 +9,7 @@
         @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap');
 
         body {
-            user-select: none;
+			user-select: none;
             font-family: 'Arial', sans-serif;
             margin: 0;
             background-color: #111;
@@ -21,45 +21,45 @@
             overflow-y: auto;
             position: relative;
         }
-        .selectable {
-            user-select: text; /* Allow text selection when this class is applied */
-        }
-        #clearButton {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            z-index: 1;
-            padding: 10px 20px;
-            font-size: 20px;
-            font-family: 'Roboto', sans-serif;
-            color: red;
-            background: transparent;
-            border: 2px solid red;
-            border-radius: 5px;
-            transition: background 0.3s, color 0.3s;
-        }
+		.selectable {
+			user-select: text; /* Allow text selection when this class is applied */
+		}
+		#clearButton {
+			position: absolute;
+			top: 10px;
+			left: 10px;
+			z-index: 1;
+			padding: 10px 20px;
+			font-size: 20px;
+			font-family: 'Roboto', sans-serif;
+			color: red;
+			background: transparent;
+			border: 2px solid red;
+			border-radius: 5px;
+			transition: background 0.3s, color 0.3s;
+		}
 
-        #clearButton:hover {
-            background: rgba(255, 0, 0, 0.1);
-            color: darkred;
-        }
-        #days-since-last-event {
-            font-family: 'Times New Roman', serif;
-            color: white;
-            font-size: 1.5em;
-            margin-top: 10px; /* Adjust the margin as needed */
-            text-align: center; /* Center the text */
-        }
-        
-        #current-date {
-            font-family: 'Georgia Bold', serif;
-            color: white;
-            font-size: 2.5em; /* Adjust the font size as needed */
-            font-weight: bold; /* Make the font bold */
-            margin-top: 7px; /* Adjust the margin as needed */
-            text-align: center; /* Center the text */
-        }
-        
+		#clearButton:hover {
+			background: rgba(255, 0, 0, 0.1);
+			color: darkred;
+		}
+		#days-since-last-event {
+			font-family: 'Times New Roman', serif;
+			color: white;
+			font-size: 1.5em;
+			margin-top: 10px; /* Adjust the margin as needed */
+			text-align: center; /* Center the text */
+		}
+		
+		#current-date {
+			font-family: 'Georgia Bold', serif;
+			color: white;
+			font-size: 2.5em; /* Adjust the font size as needed */
+			font-weight: bold; /* Make the font bold */
+			margin-top: 7px; /* Adjust the margin as needed */
+			text-align: center; /* Center the text */
+		}
+		
         .rain {
             position: absolute;
             top: 0;
@@ -103,21 +103,21 @@
         }
 
         .day {
-            border-radius: 10px;
-            padding: 15px;
-            text-align: center;
-            background-color: white;
-            color: black;
-            position: relative;
-            height: 150px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-            transition: transform 0.2s;
-            z-index: 1; /* Keep day z-index lower */
-        }
+			border-radius: 10px;
+			padding: 15px;
+			text-align: center;
+			background-color: white;
+			color: black;
+			position: relative;
+			height: 150px;
+			box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+			transition: transform 0.2s;
+			z-index: 1; /* Keep day z-index lower */
+		}
 
         .day:hover {
             transform: scale(1.05);
-            z-index: 2;
+			z-index: 2;
         }
 
         .day-header {
@@ -239,7 +239,7 @@
             top: 0; bottom: 0; left: 0; right: 0;
             transform-style: preserve-3d;
             transform: rotate3d(1, 0.5, 0, 110deg);
-            cursor: grab;
+			cursor: grab;
         }
 
         .left-wing, .right-wing {
@@ -281,37 +281,37 @@
         }
 
         .tooltip {
-            position: absolute;
-            background-color: #333;
-            color: white;
-            border-radius: 5px;
-            padding: 10px;
-            visibility: hidden;
-            opacity: 0;
-            transition: visibility 0s, opacity 0.5s linear;
-            z-index: 100; /* Increased z-index to ensure it appears above other elements */
-        }
+			position: absolute;
+			background-color: #333;
+			color: white;
+			border-radius: 5px;
+			padding: 10px;
+			visibility: hidden;
+			opacity: 0;
+			transition: visibility 0s, opacity 0.5s linear;
+			z-index: 100; /* Increased z-index to ensure it appears above other elements */
+		}
 
         .day:hover .tooltip {
             visibility: visible;
             opacity: 1;
         }
-        #current-date-jp {
-            font-family: 'Microsoft JhengHei Light', sans-serif; /* Note: requires a purchase or license */
-            color: white;
-            font-size: 1.75em; /* Adjust the font size as needed */
-            margin-top: 6px; /* Adjust the margin as needed */
-            margin-bottom: 100px; /* Adjust the margin as needed */
-            text-align: center; /* Center the text */
-        }
+		#current-date-jp {
+			font-family: 'Microsoft JhengHei Light', sans-serif; /* Note: requires a purchase or license */
+			color: white;
+			font-size: 1.75em; /* Adjust the font size as needed */
+			margin-top: 6px; /* Adjust the margin as needed */
+			margin-bottom: 100px; /* Adjust the margin as needed */
+			text-align: center; /* Center the text */
+		}
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.34/moment-timezone-with-data.min.js"></script>
 </head>
 <body>
-    <button id="clearButton" style="position: absolute; top: 10px; left: 10px; z-index: 1;">
-        Magic isn't real
-    </button>
+	<button id="clearButton" style="position: absolute; top: 10px; left: 10px; z-index: 1;">
+		Magic isn't real
+	</button>
     <div class="rain" id="rain"></div>
     <div class="header">Umineko Waiting Room</div>
     <button class="button off" id="playButton">Turn On Rain Sounds</button>
@@ -336,57 +336,57 @@
             <text id="percentage" x="300" y="290" fill="#FF5722" font-size="2em" text-anchor="middle" dominant-baseline="middle">0%</text>
         </svg>
     </div>
-    
-    <div id="days-since-last-event" class="last-event"></div>
-    <div id="current-date" class="last-event"></div>
-    <div id="current-date-jp" class="last-event"></div>
-    
+	
+	<div id="days-since-last-event" class="last-event"></div>
+	<div id="current-date" class="last-event"></div>
+	<div id="current-date-jp" class="last-event"></div>
+	
     <div class="last-event" id="last-event"></div>
     <div class="calendar" id="timetable"></div>
 
     <script>
-        document.querySelectorAll('body *').forEach(element => {
-            element.addEventListener('click', function() {
-                // Remove the selectable class from all elements
-                document.querySelectorAll('body *').forEach(el => el.classList.remove('selectable'));
-                
-                // Add the selectable class to the clicked element
-                this.classList.add('selectable');
+		
+		document.querySelectorAll('body *').forEach(element => {
+			element.addEventListener('click', function() {
+				// Remove the selectable class from all elements
+				document.querySelectorAll('body *').forEach(el => el.classList.remove('selectable'));
+				
+				// Add the selectable class to the clicked element
+				this.classList.add('selectable');
 
-                // Select the text inside the clicked element
-                const range = document.createRange();
-                range.selectNodeContents(this);
-                const selection = window.getSelection();
-                selection.removeAllRanges();
-                selection.addRange(range);
-            });
-        });
+				// Select the text inside the clicked element
+				const range = document.createRange();
+				range.selectNodeContents(this);
+				const selection = window.getSelection();
+				selection.removeAllRanges();
+				selection.addRange(range);
+			});
+		});
+		function clearSelection() {
+			document.querySelectorAll('body *').forEach(el => el.classList.remove('selectable'));
+			const selection = window.getSelection();
+			selection.removeAllRanges();
+		}
 
-        function clearSelection() {
-            document.querySelectorAll('body *').forEach(el => el.classList.remove('selectable'));
-            const selection = window.getSelection();
-            selection.removeAllRanges();
-        }
+		// Click event on the body to clear selection
+		document.body.addEventListener('click', function(event) {
+			// Clear the selection if clicking on empty space
+			if (event.target === document.body) {
+				clearSelection();
+			} else {
+				// If clicking on an element, clear and select that element
+				clearSelection();
+				event.target.classList.add('selectable');
 
-        // Click event on the body to clear selection
-        document.body.addEventListener('click', function(event) {
-            // Clear the selection if clicking on empty space
-            if (event.target === document.body) {
-                clearSelection();
-            } else {
-                // If clicking on an element, clear and select that element
-                clearSelection();
-                event.target.classList.add('selectable');
-
-                // Select the text inside the clicked element
-                const range = document.createRange();
-                range.selectNodeContents(event.target);
-                const selection = window.getSelection();
-                selection.removeAllRanges();
-                selection.addRange(range);
-            }
-        });
-    
+				// Select the text inside the clicked element
+				const range = document.createRange();
+				range.selectNodeContents(event.target);
+				const selection = window.getSelection();
+				selection.removeAllRanges();
+				selection.addRange(range);
+			}
+		});
+	
         let isRainSoundPlaying = false;
 
         document.getElementById('playButton').addEventListener('click', function() {
@@ -430,21 +430,18 @@
 
         createRain();
 
-        var butterflies = [];
+       var butterflies = [];
 
-        function initButterflies() {
-            for (let i = 0; i < 5; i++) { // Create 5 butterflies at the start
-                spawnButterfly();
-            }
-        }
+		function initButterflies() {
+			spawnButterfly();
+		}
 
-        function spawnButterfly() {
+		function spawnButterfly() {
             var b = new Butterfly();
             b.init();
             butterflies.push(b);
         }
-
-        function Butterfly() {
+		function Butterfly() {
             this.init = function() {
                 this.x = Math.random() * window.innerWidth;
                 this.y = Math.random() * window.innerHeight;
@@ -455,66 +452,87 @@
                 document.body.appendChild(this.domElement);
             }
 
-            this.moveButterfly = function() {
-                const padding = 20;
-                const boundaryX = window.innerWidth - 150 - padding;
+			this.moveButterfly = function() {
+				const padding = 20;
+				const boundaryX = window.innerWidth - 150 - padding;
 
-                this.domElement.style.transform = 'translate3D(' + this.x + 'px, ' + this.y + 'px, 0px) rotate3d(1, 0.5, 0, 110deg)';
-                
-                this.x += (Math.random() > 0.5 ? 1 : -1) * (Math.random() * 2);
-                this.y += (Math.random() > 0.5 ? 1 : -1) * (Math.random() * 2);
+				this.domElement.style.transform = 'translate3D(' + this.x + 'px, ' + this.y + 'px, 0px) rotate3d(1, 0.5, 0, 110deg)';
+				
+				var randomnumberX = Math.random();
+				var randomnumberY = Math.random();
+				
+				if (randomnumberX > 0.8) this.directionX = !this.directionX;
+				if (randomnumberY > 0.8) this.directionY = !this.directionY;
 
-                // Keep within boundaries
-                if (this.x < padding) this.x = padding;
-                if (this.x > boundaryX) this.x = boundaryX;
-                if (this.y < padding) this.y = padding;
-                if (this.y > window.innerHeight - padding) this.y = window.innerHeight - padding;
-            }
-        }
+				this.x += this.directionX ? 1 : -1;
+				this.y += this.directionY ? 1 : -1;
 
-        function animate() {
-            butterflies.forEach(function(butterfly) {
-                butterfly.moveButterfly();
-            });
-            requestAnimationFrame(animate);
-        }
+				if (this.x < padding) this.x = padding; // Keep within left padding
+				if (this.x > boundaryX) this.x = boundaryX; // Keep within right boundary
+				if (this.y < padding) this.y = padding; // Keep within top padding
+			}
+		}
 
-        // Start the butterfly animation
-        initButterflies();
-        animate();
+		function animate() {
+			butterflies.forEach(function(butterfly) {
+				butterfly.moveButterfly();
+			});
+			requestAnimationFrame(animate);
+		}
 
-        let isMousePressed = false;
+		// Start the butterfly animation
+		initButterflies();
+		animate();
 
-        document.addEventListener('mousedown', function(event) {
-            isMousePressed = true;
-            createButterflyAt(event.pageX, event.pageY); // Use pageX and pageY
-        });
+		let isMousePressed = false;
 
-        document.addEventListener('mouseup', function() {
-            isMousePressed = false;
-        });
+		document.addEventListener('mousedown', function(event) {
+			isMousePressed = true;
+			createButterflyAt(event.pageX, event.pageY); // Use pageX and pageY
+		});
 
-        document.addEventListener('mousemove', function(event) {
-            if (isMousePressed) {
-                createButterflyAt(event.pageX, event.pageY); // Use pageX and pageY
-            }
-        });
-        document.getElementById('clearButton').addEventListener('click', clearAllButterflies);
-        function clearAllButterflies() {
+		document.addEventListener('mouseup', function() {
+			isMousePressed = false;
+		});
+
+		document.addEventListener('mousemove', function(event) {
+			if (isMousePressed) {
+				createButterflyAt(event.pageX, event.pageY); // Use pageX and pageY
+			}
+		});
+		document.getElementById('clearButton').addEventListener('click', clearAllButterflies);
+		function clearAllButterflies() {
             butterflies.forEach(butterfly => {
                 butterfly.domElement.remove(); // Remove from DOM
             });
             butterflies = []; // Clear the array
         }
+		function createButterflyAt(x, y) {
+			const butterfly = new Butterfly();
+			butterfly.init();
+			butterfly.x = x;
+			butterfly.y = y;
+			butterfly.moveButterfly();
+			butterflies.push(butterfly);
+		}
 
-        function createButterflyAt(x, y) {
-            const butterfly = new Butterfly();
-            butterfly.init();
-            butterfly.x = x;
-            butterfly.y = y;
-            butterfly.moveButterfly();
-            butterflies.push(butterfly);
-        }
+		// Modify the Butterfly class to set position
+		Butterfly.prototype.moveButterfly = function() {
+			const padding = 20;
+			const boundaryX = window.innerWidth - 150 - padding;
+
+			this.domElement.style.transform = 'translate3D(' + this.x + 'px, ' + this.y + 'px, 0px) rotate3d(1, 0.5, 0, 110deg)';
+			
+			// Optional: Add random movement to the butterflies
+			this.x += (Math.random() > 0.5 ? 1 : -1) * (Math.random() * 2);
+			this.y += (Math.random() > 0.5 ? 1 : -1) * (Math.random() * 2);
+
+			// Keep within boundaries
+			if (this.x < padding) this.x = padding;
+			if (this.x > boundaryX) this.x = boundaryX;
+			if (this.y < padding) this.y = padding;
+			if (this.y > window.innerHeight - padding) this.y = window.innerHeight - padding;
+		}
 
         const streamFileUrl = 'https://raw.githubusercontent.com/IamDivan/Umineko-Waiting-Room/main/Timetable.txt';
 
@@ -522,7 +540,7 @@
             const response = await fetch(streamFileUrl);
             const text = await response.text();
             return text.split('\n').reduce((acc, line) => {
-                const [date, category] = line.split(', ').map(item =>item.trim());
+                const [date, category] = line.split(', ').map(item => item.trim());
                 if (date && category) {
                     acc[date] = category;
                 }
@@ -539,127 +557,126 @@
             return dates;
         }
 
-        function renderTimetable(schedule) {
-            const timetable = document.getElementById('timetable');
-            const today = moment.utc();
-            const categoryColors = {};
+		function renderTimetable(schedule) {
+			const timetable = document.getElementById('timetable');
+			const today = moment.utc();
+			const categoryColors = {};
 
-            const categoryLinks = [
-                ["No streams", "https://www.youtube.com/watch?v=bsH-QDlSeWk&list=PLBd_FoFE8OGegkkphN-bwzehUfCpPaYg9&ab_channel=NonOfficialDaily%28ish%29JosephAnderson", "No Upcoming Streams"],
-                ["Persona 3:Reload", "https://www.youtube.com/playlist?list=PL1bauNEiHIgx0PbuWqpvWLds4uHCrVERM", "I'drwNLpSAP"],
-                ["Umineko", "https://www.twitch.tv/andersonjph", "Click me"],
-                ["Umineko with @._mouse", "https://www.youtube.com/watch?v=OXQwx1EolD8&ab_channel=JGWentworthh", "Who is Mouse?"]
-            ];
+			const categoryLinks = [
+				["No streams", "https://www.youtube.com/watch?v=bsH-QDlSeWk&list=PLBd_FoFE8OGegkkphN-bwzehUfCpPaYg9&ab_channel=NonOfficialDaily%28ish%29JosephAnderson", "No Upcoming Streams"],
+				["Persona 3:Reload", "https://www.youtube.com/playlist?list=PL1bauNEiHIgx0PbuWqpvWLds4uHCrVERM", "I'drwNLpSAP"],
+				["Umineko", "https://www.twitch.tv/andersonjph", "Click me"],
+				["Umineko with @._mouse", "https://www.youtube.com/watch?v=OXQwx1EolD8&ab_channel=JGWentworthh", "Who is Mouse?"]
+			];
 
-            let nextNextSunday = today.clone();
-            nextNextSunday.day(nextNextSunday.day() === 0 ? 14 : 14);
+			let nextNextSunday = today.clone();
+			nextNextSunday.day(nextNextSunday.day() === 0 ? 14 : 14);
 
-            const startDate = nextNextSunday.clone().subtract(20, 'days');
-            const weekDates = createCalendarDates(startDate, 21);
+			const startDate = nextNextSunday.clone().subtract(20, 'days');
+			const weekDates = createCalendarDates(startDate, 21);
 
-            weekDates.forEach(({ date, weekday }) => {
-                const category = schedule[date] || 'No streams';
-                if (!categoryColors[category]) {
-                    categoryColors[category] = getRandomColor();
-                }
+			weekDates.forEach(({ date, weekday }) => {
+				const category = schedule[date] || 'No streams';
+				if (!categoryColors[category]) {
+					categoryColors[category] = getRandomColor();
+				}
 
-                const categoryLink = categoryLinks.find(item => item[0] === category);
-                const link = categoryLink ? categoryLink[1] : "https://www.twitch.tv/andersonjph";
-                const tooltipText = categoryLink ? categoryLink[2] : "No Upcoming Streams";
+				const categoryLink = categoryLinks.find(item => item[0] === category);
+				const link = categoryLink ? categoryLink[1] : "https://www.twitch.tv/andersonjph";
+				const tooltipText = categoryLink ? categoryLink[2] : "No Upcoming Streams";
 
-                const eventDate = moment.utc(date, 'DD.MM.YYYY').set({ hour: 17 });
-                const isToday = eventDate.isSame(today, 'day');
-                const isPast17 = eventDate.isBefore(today) || (isToday && today.hour() >= 17);
+				const eventDate = moment.utc(date, 'DD.MM.YYYY').set({ hour: 17 });
+				const isToday = eventDate.isSame(today, 'day');
+				const isPast17 = eventDate.isBefore(today) || (isToday && today.hour() >= 17);
 
-                const dayDiv = document.createElement('div');
-                dayDiv.className = 'day' + (isPast17 ? ' past-day' : '');
+				const dayDiv = document.createElement('div');
+				dayDiv.className = 'day' + (isPast17 ? ' past-day' : '');
 
-                dayDiv.innerHTML = `
-                    <div class="day-header" style="background-color: ${categoryColors[category]}">${weekday} <span class="date">${date}</span></div>
-                    <div class="category">${category}</div>
-                    ${category !== 'No streams' ? '<div class="category">At 17:00 UTC</div>' : ''}
-                    <div class="tooltip" style="display:none; position:absolute;">
-                        <a href="${link}" target="_blank" style="color: white;">${tooltipText}</a>
-                    </div>
-                `;
+				dayDiv.innerHTML = `
+					<div class="day-header" style="background-color: ${categoryColors[category]}">${weekday} <span class="date">${date}</span></div>
+					<div class="category">${category}</div>
+					${category !== 'No streams' ? '<div class="category">At 17:00 UTC</div>' : ''}
+					<div class="tooltip" style="display:none; position:absolute;">
+						<a href="${link}" target="_blank" style="color: white;">${tooltipText}</a>
+					</div>
+				`;
 
-                dayDiv.addEventListener('mouseenter', function() {
-                    const tooltip = dayDiv.querySelector('.tooltip');
-                    tooltip.style.display = 'block';
-                });
-                dayDiv.addEventListener('mouseleave', function() {
-                    const tooltip = dayDiv.querySelector('.tooltip');
-                    tooltip.style.display = 'none';
-                });
+				dayDiv.addEventListener('mouseenter', function() {
+					const tooltip = dayDiv.querySelector('.tooltip');
+					tooltip.style.display = 'block';
+				});
+				dayDiv.addEventListener('mouseleave', function() {
+					const tooltip = dayDiv.querySelector('.tooltip');
+					tooltip.style.display = 'none';
+				});
 
-                timetable.appendChild(dayDiv);
-            });
-        }
-
+				timetable.appendChild(dayDiv);
+			});
+		}
         function startCountdown(schedule) {
-            const now = moment.utc(); 
-            let targetDate = null;
-            let lastEventDate = null;
+			const now = moment.utc(); 
+			let targetDate = null;
+			let lastEventDate = null;
 
-            for (const [date, category] of Object.entries(schedule)) {
-                const eventDate = moment.utc(date, 'DD.MM.YYYY').set({ hour: 17, minute: 0, second: 0 });
+			for (const [date, category] of Object.entries(schedule)) {
+				const eventDate = moment.utc(date, 'DD.MM.YYYY').set({ hour: 17, minute: 0, second: 0 });
 
-                if (eventDate.isAfter(now) && category.includes("Umineko")) {
-                    targetDate = eventDate;
-                    break;
-                }
+				if (eventDate.isAfter(now) && category.includes("Umineko")) {
+					targetDate = eventDate;
+					break;
+				}
 
-                if (eventDate.isBefore(now) && category.includes("Umineko")) {
-                    lastEventDate = eventDate;
-                }
-            }
+				if (eventDate.isBefore(now) && category.includes("Umineko")) {
+					lastEventDate = eventDate;
+				}
+			}
 
-            if (!targetDate) {
-                document.getElementById('countdown').innerHTML = "No upcoming 'Umineko' events found.";
-                return;
-            }
+			if (!targetDate) {
+				document.getElementById('countdown').innerHTML = "No upcoming 'Umineko' events found.";
+				return;
+			}
 
-            const countdownElement = document.getElementById('countdown');
-            const loadingCircle = document.getElementById('progress-circle');
-            const percentageElement = document.getElementById('percentage');
-            const totalDuration = targetDate.diff(lastEventDate);
+			const countdownElement = document.getElementById('countdown');
+			const loadingCircle = document.getElementById('progress-circle');
+			const percentageElement = document.getElementById('percentage');
+			const totalDuration = targetDate.diff(lastEventDate);
 
-            const updateCountdown = () => {
-                const remainingTime = targetDate.diff(moment.utc());
+			const updateCountdown = () => {
+				const remainingTime = targetDate.diff(moment.utc());
 
-                if (remainingTime < 0) {
-                    countdownElement.innerHTML = "Event has started!";
-                    clearInterval(interval);
-                    return;
-                }
+				if (remainingTime < 0) {
+					countdownElement.innerHTML = "Event has started!";
+					clearInterval(interval);
+					return;
+				}
 
-                const duration = moment.duration(remainingTime);
-                countdownElement.innerHTML = `${duration.days()}d ${duration.hours()}h ${duration.minutes()}m ${duration.seconds()}s`;
+				const duration = moment.duration(remainingTime);
+				countdownElement.innerHTML = `${duration.days()}d ${duration.hours()}h ${duration.minutes()}m ${duration.seconds()}s`;
 
-                const elapsedTime = moment.utc().diff(lastEventDate);
-                const percentage = Math.min((elapsedTime / totalDuration) * 100, 100);
-                const offset = 1413 - (percentage / 100) * 1413;
-                loadingCircle.style.strokeDashoffset = offset;
-                percentageElement.innerHTML = `${percentage.toFixed(5)}%`;
+				const elapsedTime = moment.utc().diff(lastEventDate);
+				const percentage = Math.min((elapsedTime / totalDuration) * 100, 100);
+				const offset = 1413 - (percentage / 100) * 1413;
+				loadingCircle.style.strokeDashoffset = offset;
+				percentageElement.innerHTML = `${percentage.toFixed(5)}%`;
 
-                // Calculate days since last event and update the text
-                const daysSinceLastEvent = moment.utc().diff(lastEventDate, 'days');
-                const dayText = daysSinceLastEvent === 0 ? "The First Day" :
-                                daysSinceLastEvent === 1 ? "The Second Day" :
-                                daysSinceLastEvent === 2 ? "The Third Day" :
-                                daysSinceLastEvent === 3 ? "The Fourth Day" :
-                                `${daysSinceLastEvent + 1} day`;
+				// Calculate days since last event and update the text
+				const daysSinceLastEvent = moment.utc().diff(lastEventDate, 'days');
+				const dayText = daysSinceLastEvent === 0 ? "The First Day" :
+								daysSinceLastEvent === 1 ? "The Second Day" :
+								daysSinceLastEvent === 2 ? "The Third Day" :
+								daysSinceLastEvent === 3 ? "The Fourth Day" :
+								`${daysSinceLastEvent + 1} day`;
 
-                document.getElementById('days-since-last-event').innerHTML = dayText;
+				document.getElementById('days-since-last-event').innerHTML = dayText;
 
-                if (percentage > 0 && butterflies.length === 0) {
-                    initButterflies();
-                }
-            };
+				if (percentage > 0 && butterflies.length === 0) {
+					initButterflies();
+				}
+			};
 
-            updateCountdown();
-            const interval = setInterval(updateCountdown, 1000);
-        }
+			updateCountdown();
+			const interval = setInterval(updateCountdown, 1000);
+		}
 
         function updateLastEvent(schedule) {
             const now = moment.utc(); 
@@ -688,29 +705,29 @@
                 lastEventElement.innerHTML = "No past 'Umineko' events found.";
             }
         }
-        
-        function displayCurrentDate() {
-            const today = moment.utc();
-            const formattedDate = today.format('MMMM Do, YYYY'); // English format
-            const formattedDateJP = today.locale('ja').format('YYYY年M月D日'); // Japanese format
+		
+		function displayCurrentDate() {
+			const today = moment.utc();
+			const formattedDate = today.format('MMMM Do, YYYY'); // English format
+			const formattedDateJP = today.locale('ja').format('YYYY年M月D日'); // Japanese format
 
-            document.getElementById('current-date').innerHTML = formattedDate;
-            document.getElementById('current-date-jp').innerHTML = formattedDateJP;
-        }
+			document.getElementById('current-date').innerHTML = formattedDate;
+			document.getElementById('current-date-jp').innerHTML = formattedDateJP;
+		}
 
         async function init() {
-            try {
-                const schedule = await fetchStreamSchedule();
-                renderTimetable(schedule);
-                startCountdown(schedule);
-                updateLastEvent(schedule);
-                displayCurrentDate(); // Call to display the current date
-            } catch (error) {
-                console.error('Error fetching stream schedule:', error);
-                const timetable = document.getElementById('timetable');
-                timetable.innerHTML = '<div class="day">Failed to load schedule</div>';
-            }
-        }
+			try {
+				const schedule = await fetchStreamSchedule();
+				renderTimetable(schedule);
+				startCountdown(schedule);
+				updateLastEvent(schedule);
+				displayCurrentDate(); // Call to display the current date
+			} catch (error) {
+				console.error('Error fetching stream schedule:', error);
+				const timetable = document.getElementById('timetable');
+				timetable.innerHTML = '<div class="day">Failed to load schedule</div>';
+			}
+		}
 
         function getRandomColor() {
             const letters = '0123456789ABCDEF';
@@ -722,7 +739,7 @@
         }
 
         init();
-        initButterflies();
+		initButterflies();
     </script>
 </body>
 </html>
