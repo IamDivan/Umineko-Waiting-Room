@@ -337,7 +337,7 @@
         /* Style for the color slider */
         #colorSlider {
 		    position: absolute;
-            top: 60px;
+            top: 69px;
             left: 180px;
             margin: 10px 0; /* Margin for spacing */
         }
@@ -351,49 +351,37 @@
             font-size: 18px;
             font-family: 'Roboto', sans-serif;
             color: white;
-            background: linear-gradient(45deg, #FFD700, #FFAA00);
-            border: none;
+            background: transparent;
+            border: 2px solid #FFD700; /* Transparent background */
             border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.5);
             cursor: pointer;
             transition: transform 0.2s, box-shadow 0.3s, filter 0.3s;
+            margin-top: 10px;
         }
 
         #resetColorButton:hover {
-            transform: scale(1.05);
-            box-shadow: 0 8px 20px rgba(255, 215, 0, 0.7);
             filter: brightness(1.1);
-        }
-
-        #resetColorButton:active {
-            transform: scale(0.95);
         }
 
         /* Style for the rainbow button */
         #rainbowButton {
 			position: absolute;
-            top: 110px;
+            top: 120px;
             left: 10px;
             padding: 12px 24px;
             font-size: 18px;
             font-family: 'Roboto', sans-serif;
             color: white;
-            background: linear-gradient(45deg, #FF007F, #7F00FF);
-            border: none;
+            background: transparent;
+            border: 2px solid #FF007F; /* Transparent background */
             border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(255, 0, 127, 0.5);
             cursor: pointer;
             transition: transform 0.2s, box-shadow 0.3s, filter 0.3s;
+            margin-top: 10px;
         }
 
         #rainbowButton:hover {
-            transform: scale(1.05);
-            box-shadow: 0 8px 20px rgba(255, 0, 127, 0.7);
             filter: brightness(1.1);
-        }
-
-        #rainbowButton:active {
-            transform: scale(0.95);
         }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
@@ -545,7 +533,7 @@
 
                 if (this.x < padding) this.x = padding; // Keep within left padding
                 if (this.x > boundaryX) this.x = boundaryX; // Keep within right boundary
-                if (this.y < padding) this.y = padding; // Keep within top padding
+                if (this.y < padding) this.y = padding;// Keep within top padding
             }
         }
 
