@@ -383,6 +383,13 @@
         #rainbowButton:hover {
             filter: brightness(1.1);
         }
+
+        canvas {
+            margin-bottom: 0px;
+            background: transparent;
+            display: block;
+            margin: auto;
+        }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.34/moment-timezone-with-data.min.js"></script>
@@ -423,11 +430,73 @@
     <div id="current-date" class="last-event"></div>
     <div id="current-date-jp" class="last-event"></div>
     
+    <!-- Clock Implementation -->
+    <canvas id="clockCanvas" width="400" height="400"></canvas>
     <div id="current-utc-time" class="last-event"></div>
     <div class="last-event" id="last-event"></div>
     <div class="calendar" id="timetable"></div>
 
     <script>
+        // Clock Implementation
+        const loadImages = (srcs) => {
+            return Promise.all(srcs.map(src => {
+                return new Promise(resolve => {
+                    const img = new Image();
+                    img.src = src;
+                    img.onload = () => resolve(img);
+                });
+            }));
+        };
+
+        const drawClock = (bodyImg, hourImg, minuteImg, centerImg) => {
+            const now = moment.utc();
+            const currentHour = now.hours();
+            const currentMinute = now.minutes();
+
+            const hourAngle = (currentHour % 12) * 30 + (currentMinute / 60) * 30;
+            const minuteAngle = currentMinute * 6;
+
+            const canvas = document.getElementById('clockCanvas');
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.drawImage(bodyImg, 0, 0, canvas.width, canvas.height);
+
+            const hourScale = 0.5;
+            const minuteScale = 0.5;
+
+            ctx.save();
+            ctx.translate(canvas.width / 2, canvas.height / 2);
+            ctx.rotate((Math.PI / 180) * hourAngle);
+            ctx.drawImage(hourImg, -hourImg.width * hourScale / 2, -hourImg.height * hourScale / 2, hourImg.width * hourScale, hourImg.height * hourScale);
+            ctx.restore();
+
+            ctx.save();
+            ctx.translate(canvas.width / 2, canvas.height / 2);
+            ctx.rotate((Math.PI / 180) * minuteAngle);
+            ctx.drawImage(minuteImg, -minuteImg.width * minuteScale / 2, -minuteImg.height * minuteScale / 2, minuteImg.width * minuteScale, minuteImg.height * minuteScale);
+            ctx.restore();
+
+            const centerScale = 1 / 3; // Scale down to one third
+            ctx.drawImage(centerImg, 
+                (canvas.width - centerImg.width * centerScale) / 2, 
+                (canvas.height - centerImg.height * centerScale) / 2, 
+                centerImg.width * centerScale, 
+                centerImg.height * centerScale
+            );
+        };
+
+        loadImages([
+            'https://github.com/IamDivan/Umineko-Waiting-Room/raw/main/clock/clock.png',
+            'https://github.com/IamDivan/Umineko-Waiting-Room/raw/main/clock/clock_h.png',
+            'https://github.com/IamDivan/Umineko-Waiting-Room/raw/main/clock/clock_m.png',
+            'https://github.com/IamDivan/Umineko-Waiting-Room/raw/main/clock/clock_c.png'
+        ]).then(images => {
+            setInterval(() => {
+                drawClock(images[0], images[1], images[2], images[3]);
+            }, 1000);
+        });
+
+        // Existing JavaScript Code Below
         let isRainSoundPlaying = false;
         let butterflyColor = "#FFD700"; // Default color
         let rainbowButterflies = false; // Toggle for rainbow butterflies
@@ -456,7 +525,7 @@
                 this.textContent = 'Turn On Rain Sounds'; // Change button text
             }
 
-            isRainSoundPlaying = !isRainSoundPlaying; // Toggle the state
+			isRainSoundPlaying = !isRainSoundPlaying; // Toggle the state
         });
 
         document.getElementById('copyButton').addEventListener('click', function() {
@@ -533,7 +602,7 @@
 
                 if (this.x < padding) this.x = padding; // Keep within left padding
                 if (this.x > boundaryX) this.x = boundaryX; // Keep within right boundary
-                if (this.y < padding) this.y = padding;// Keep within top padding
+                if (this.y < padding) this.y = padding; // Keep within top padding
             }
         }
 
