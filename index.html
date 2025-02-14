@@ -282,7 +282,7 @@
         }
 
         .top, .bottom {
-            background: gold;
+            background: gold; /* Default color */
             opacity: 0.7;
             position: absolute;
         }
@@ -325,13 +325,76 @@
             margin-bottom: 100px;
             text-align: center;
         }
-		#current-utc-time {
-			font-family: 'Microsoft JhengHei Light', sans-serif;
-			color: white;
-			font-size: 1.75em; /* Same size as Japanese date */
-			text-align: center;
+
+        #current-utc-time {
+            font-family: 'Microsoft JhengHei Light', sans-serif;
+            color: white;
+            font-size: 1.75em; /* Same size as Japanese date */
+            text-align: center;
             margin-bottom: 5px;
-		}
+        }
+
+        /* Style for the color slider */
+        #colorSlider {
+		    position: absolute;
+            top: 60px;
+            left: 180px;
+            margin: 10px 0; /* Margin for spacing */
+        }
+
+        /* Style for the reset button */
+        #resetColorButton {
+		    position: absolute;
+            top: 60px;
+            left: 10px;
+            padding: 12px 24px;
+            font-size: 18px;
+            font-family: 'Roboto', sans-serif;
+            color: white;
+            background: linear-gradient(45deg, #FFD700, #FFAA00);
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.5);
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.3s, filter 0.3s;
+        }
+
+        #resetColorButton:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(255, 215, 0, 0.7);
+            filter: brightness(1.1);
+        }
+
+        #resetColorButton:active {
+            transform: scale(0.95);
+        }
+
+        /* Style for the rainbow button */
+        #rainbowButton {
+			position: absolute;
+            top: 110px;
+            left: 10px;
+            padding: 12px 24px;
+            font-size: 18px;
+            font-family: 'Roboto', sans-serif;
+            color: white;
+            background: linear-gradient(45deg, #FF007F, #7F00FF);
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(255, 0, 127, 0.5);
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.3s, filter 0.3s;
+        }
+
+        #rainbowButton:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(255, 0, 127, 0.7);
+            filter: brightness(1.1);
+        }
+
+        #rainbowButton:active {
+            transform: scale(0.95);
+        }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.34/moment-timezone-with-data.min.js"></script>
@@ -339,6 +402,12 @@
 <body>
     <button id="clearButton">Magic isn't real lmao</button>
     <button id="copyButton">Copy Countdown</button>
+    
+    <!-- Color slider for butterfly color -->
+    <input type="color" id="colorSlider" value="#FFD700"> <!-- Default gold color -->
+    <button id="resetColorButton">Reset to Gold</button> <!-- Reset button -->
+    <button id="rainbowButton">Turn On Rainbow Butterflies</button> <!-- Rainbow button -->
+
     <div class="rain" id="rain"></div>
     <div class="header">Umineko Waiting Room</div>
     <button class="button off" id="playButton">Turn On Rain Sounds</button>
@@ -365,13 +434,16 @@
     <div id="days-since-last-event" class="last-event"></div>
     <div id="current-date" class="last-event"></div>
     <div id="current-date-jp" class="last-event"></div>
-	
-	<div id="current-utc-time" class="last-event"></div>
+    
+    <div id="current-utc-time" class="last-event"></div>
     <div class="last-event" id="last-event"></div>
     <div class="calendar" id="timetable"></div>
 
     <script>
         let isRainSoundPlaying = false;
+        let butterflyColor = "#FFD700"; // Default color
+        let rainbowButterflies = false; // Toggle for rainbow butterflies
+        var butterflies = [];
 
         document.getElementById('playButton').addEventListener('click', function() {
             const rainSound = document.getElementById('rainSound');
@@ -399,7 +471,6 @@
             isRainSoundPlaying = !isRainSoundPlaying; // Toggle the state
         });
 
-        // Copy countdown and percentage to clipboard
         document.getElementById('copyButton').addEventListener('click', function() {
             const countdownText = document.getElementById('countdown').textContent;
             const percentageText = document.getElementById('percentage').textContent;
@@ -412,7 +483,6 @@
             });
         });
 
-        // Rain effect
         function createRain() {
             const rainContainer = document.getElementById('rain');
             for (let i = 0; i < 100; i++) {
@@ -427,26 +497,34 @@
 
         createRain();
 
-        var butterflies = [];
-
         function initButterflies() {
             spawnButterfly();
         }
 
         function spawnButterfly() {
-            var b = new Butterfly();
+            var b = new Butterfly(rainbowButterflies ? getRandomColor() : butterflyColor); // Pass the color
             b.init();
             butterflies.push(b);
         }
 
-        function Butterfly() {
+        function Butterfly(color) {
+            this.color = color; // Store the color
             this.init = function() {
                 this.x = Math.random() * window.innerWidth;
                 this.y = Math.random() * window.innerHeight;
 
                 this.domElement = document.createElement('div');
                 this.domElement.className = 'butterfly';
-                this.domElement.innerHTML = '<div class="left-wing"><div class="top"></div><div class="bottom"></div></div><div class="right-wing"><div class="top"></div><div class="bottom"></div></div>';
+                this.domElement.innerHTML = `
+                    <div class="left-wing">
+                        <div class="top" style="background: ${this.color};"></div>
+                        <div class="bottom" style="background: ${this.color};"></div>
+                    </div>
+                    <div class="right-wing">
+                        <div class="top" style="background: ${this.color};"></div>
+                        <div class="bottom" style="background: ${this.color};"></div>
+                    </div>
+                `;
                 document.body.appendChild(this.domElement);
             }
 
@@ -478,7 +556,6 @@
             requestAnimationFrame(animate);
         }
 
-        // Start the butterfly animation
         initButterflies();
         animate();
 
@@ -508,7 +585,7 @@
         }
 
         function createButterflyAt(x, y) {
-            const butterfly = new Butterfly();
+            const butterfly = new Butterfly(rainbowButterflies ? getRandomColor() : butterflyColor); // Use the current color
             butterfly.init();
             butterfly.x = x;
             butterfly.y = y;
@@ -516,14 +593,11 @@
             butterflies.push(butterfly);
         }
 
-        // Modify the Butterfly class to set position
         Butterfly.prototype.moveButterfly = function() {
             const padding = 20;
             const boundaryX = window.innerWidth - 110 - padding;
-
             this.domElement.style.transform = 'translate3D(' + this.x + 'px, ' + this.y + 'px, 0px) rotate3d(1, 0.5, 0, 110deg)';
             
-            // Optional: Add random movement to the butterflies
             this.x += (Math.random() > 0.5 ? 1 : -1) * (Math.random() * 2);
             this.y += (Math.random() > 0.5 ? 1 : -1) * (Math.random() * 2);
 
@@ -717,30 +791,30 @@
         }
 
         function displayCurrentUTCTime() {
-			const now = moment.utc();
-			const formattedUTC = now.format('HH:mm:ss [UTC]');
-			document.getElementById('current-utc-time').innerHTML = `Current Time: ${formattedUTC}`;
-		}
+            const now = moment.utc();
+            const formattedUTC = now.format('HH:mm:ss [UTC]');
+            document.getElementById('current-utc-time').innerHTML = `Current Time: ${formattedUTC}`;
+        }
 
-		function initUTCUpdater() {
-			displayCurrentUTCTime(); // Initial call to display the time
-			setInterval(displayCurrentUTCTime, 1000); // Update every second
-		}
+        function initUTCUpdater() {
+            displayCurrentUTCTime(); // Initial call to display the time
+            setInterval(displayCurrentUTCTime, 1000); // Update every second
+        }
 
-		async function init() {
-			try {
-				const schedule = await fetchStreamSchedule();
-				renderTimetable(schedule);
-				startCountdown(schedule);
-				updateLastEvent(schedule);
-				displayCurrentDate();
-				initUTCUpdater(); // Initialize the UTC time updater
-			} catch (error) {
-				console.error('Error fetching stream schedule:', error);
-				const timetable = document.getElementById('timetable');
-				timetable.innerHTML = '<div class="day">Failed to load schedule</div>';
-			}
-		}
+        async function init() {
+            try {
+                const schedule = await fetchStreamSchedule();
+                renderTimetable(schedule);
+                startCountdown(schedule);
+                updateLastEvent(schedule);
+                displayCurrentDate();
+                initUTCUpdater(); // Initialize the UTC time updater
+            } catch (error) {
+                console.error('Error fetching stream schedule:', error);
+                const timetable = document.getElementById('timetable');
+                timetable.innerHTML = '<div class="day">Failed to load schedule</div>';
+            }
+        }
 
         function getRandomColor() {
             const letters = '0123456789ABCDEF';
@@ -750,6 +824,23 @@
             }
             return color;
         }
+
+        // Update butterflies color when the slider changes
+        document.getElementById('colorSlider').addEventListener('input', function() {
+            butterflyColor = this.value; // Update current color
+        });
+
+        // Reset color to gold when the button is clicked
+        document.getElementById('resetColorButton').addEventListener('click', function() {
+            butterflyColor = "#FFD700"; // Reset to gold
+            document.getElementById('colorSlider').value = butterflyColor; // Update slider
+        });
+
+        // Toggle rainbow butterflies
+        document.getElementById('rainbowButton').addEventListener('click', function() {
+            rainbowButterflies = !rainbowButterflies; // Toggle rainbow effect
+            this.textContent = rainbowButterflies ? "Turn Off Rainbow Butterflies" : "Turn On Rainbow Butterflies"; // Update button text
+        });
 
         init();
         initButterflies();
