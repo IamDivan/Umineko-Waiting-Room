@@ -645,13 +645,13 @@
         }
 
         function createButterflyAt(x, y) {
-            const butterfly = new Butterfly(rainbowButterflies ? getRandomColor() : butterflyColor); // Use the current color
-            butterfly.init();
-            butterfly.x = x;
-            butterfly.y = y;
-            butterfly.moveButterfly();
-            butterflies.push(butterfly);
-        }
+			const butterfly = new Butterfly(rainbowButterflies ? getRandomColor() : butterflyColor); // Use the current color
+			butterfly.init();
+			butterfly.x = x - 30; // Adjust x position
+			butterfly.y = y - 30; // Adjust y position
+			butterfly.moveButterfly();
+			butterflies.push(butterfly);
+		}
 
         Butterfly.prototype.moveButterfly = function() {
             const padding = 20;
