@@ -336,7 +336,7 @@
 
         /* Style for the color slider */
         #colorSlider {
-		    position: absolute;
+            position: absolute;
             top: 69px;
             left: 180px;
             margin: 10px 0; /* Margin for spacing */
@@ -344,7 +344,7 @@
 
         /* Style for the reset button */
         #resetColorButton {
-		    position: absolute;
+            position: absolute;
             top: 60px;
             left: 10px;
             padding: 12px 24px;
@@ -365,7 +365,7 @@
 
         /* Style for the rainbow button */
         #rainbowButton {
-			position: absolute;
+            position: absolute;
             top: 120px;
             left: 10px;
             padding: 12px 24px;
@@ -525,8 +525,8 @@
                 this.textContent = 'Turn On Rain Sounds'; // Change button text
             }
 
-			isRainSoundPlaying = !isRainSoundPlaying; // Toggle the state
-        });
+            isRainSoundPlaying = !isRainSoundPlaying;
+		});
 
         document.getElementById('copyButton').addEventListener('click', function() {
             const countdownText = document.getElementById('countdown').textContent;
@@ -619,8 +619,11 @@
         let isMousePressed = false;
 
         document.addEventListener('mousedown', function(event) {
-            isMousePressed = true;
-            createButterflyAt(event.pageX, event.pageY);
+            // Check if the clicked target is a UI element
+            if (!event.target.closest('#clearButton, #copyButton, #colorSlider, #resetColorButton, #rainbowButton, .button')) {
+                isMousePressed = true;
+                createButterflyAt(event.pageX, event.pageY);
+            }
         });
 
         document.addEventListener('mouseup', function() {
@@ -628,7 +631,7 @@
         });
 
         document.addEventListener('mousemove', function(event) {
-            if (isMousePressed) {
+            if (isMousePressed && !event.target.closest('#clearButton, #copyButton, #colorSlider, #resetColorButton, #rainbowButton, .button')) {
                 createButterflyAt(event.pageX, event.pageY);
             }
         });
