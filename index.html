@@ -390,7 +390,26 @@
             display: block;
             margin-bottom: 40px;
         }
+		#bellButton {
+			position: absolute;
+			top: 180px; /* Adjust position as needed */
+			left: 10px;
+			padding: 12px 24px;
+			font-size: 18px;
+			font-family: 'Roboto', sans-serif;
+			color: white;
+			background: transparent;
+			border: 2px solid green; /* Border color */
+			border-radius: 10px;
+			cursor: pointer;
+			transition: transform 0.2s, box-shadow 0.3s, filter 0.3s;
+			margin-top: 10px;
+		}
 
+		#bellButton:hover {
+			filter: brightness(1.1);
+			background: rgba(255, 0, 127, 0.2); /* Add a light background effect on hover */
+		}
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.34/moment-timezone-with-data.min.js"></script>
