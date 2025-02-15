@@ -390,11 +390,13 @@
             display: block;
             margin-bottom: 40px;
         }
+
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.34/moment-timezone-with-data.min.js"></script>
 </head>
 <body>
+	<button id="bellButton">Turn On the Bell</button>
     <button id="clearButton">Magic isn't real lmao</button>
     <button id="copyButton">Copy Countdown</button>
     
@@ -620,7 +622,7 @@
 
         document.addEventListener('mousedown', function(event) {
             // Check if the clicked target is a UI element
-            if (!event.target.closest('#clearButton, #copyButton, #colorSlider, #resetColorButton, #rainbowButton, .button')) {
+            if (!event.target.closest('#clearButton, #copyButton, #colorSlider, #resetColorButton, #rainbowButton, .button, #bellButton')) {
                 isMousePressed = true;
                 createButterflyAt(event.pageX, event.pageY);
             }
@@ -786,14 +788,17 @@
             const totalDuration = targetDate.diff(lastEventDate);
 
             const updateCountdown = () => {
-                const remainingTime = targetDate.diff(moment.utc());
+				const remainingTime = targetDate.diff(moment.utc());
 
-                if (remainingTime < 0) {
-                    countdownElement.innerHTML = "Event has started!";
-                    clearInterval(interval);
-                    return;
-                }
-
+				if (remainingTime < 0) {
+					countdownElement.innerHTML = "Umineko has started!";
+					if (isBellOn) {
+						bellAudio.play(); // Play the sound if the bell is on
+					}
+					clearInterval(interval);
+					return;
+				}
+				
                 const duration = moment.duration(remainingTime);
                 countdownElement.innerHTML = `${duration.days()}d ${duration.hours()}h ${duration.minutes()}m ${duration.seconds()}s`;
 
@@ -869,6 +874,16 @@
             displayCurrentUTCTime(); // Initial call to display the time
             setInterval(displayCurrentUTCTime, 1000); // Update every second
         }
+		
+		// Add the audio element for the bell sound
+		const bellAudio = new Audio('https://github.com/IamDivan/Umineko-Waiting-Room/raw/main/clock/umilse_1053.ogg');
+		let isBellOn = false;
+
+		// Event listener for the bell button
+		document.getElementById('bellButton').addEventListener('click', function() {
+			isBellOn = !isBellOn;
+			this.textContent = isBellOn ? "Turn Off the Bell" : "Turn On the Bell"; // Toggle button text
+		});
 
         async function init() {
             try {
