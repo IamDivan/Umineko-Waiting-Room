@@ -6,4 +6,4 @@
 ["(Umineko fanart) + Umineko", "https://janart.bulder.fi/", "Fanart everywhere", "Gold"]
 ["(fanart) + Oops all Umineko", "https://janart.bulder.fi/", "so many fanarts", "Gold"]
 ["Umineko with @._mouse", "https://www.twitch.tv/helloitsmouse", "Who is Mouse?", "magenta"]
-["Umineko (potential collab with @jelly_channei)", "https://www.twitch.tv/jelly_channei", "Who is Jelly?", "magenta"]
+["Umineko (with @jelly_channei)", "https://www.twitch.tv/jelly_channei", "Who is Jelly?", "magenta"]
