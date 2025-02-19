@@ -715,14 +715,22 @@
         function renderTimetable(schedule) {
 			const timetable = document.getElementById('timetable');
 			const today = moment.utc();
-			const categoryColors = {};
-
+			
+			// Define categories with their respective colors
 			const categoryLinks = [
-				["No streams", "https://www.youtube.com/watch?v=bsH-QDlSeWk&list=PLBd_FoFE8OGegkkphN-bwzehUfCpPaYg9&ab_channel=NonOfficialDaily%28ish%29JosephAnderson", "No Upcoming Streams"],
-				["Persona 3:Reload", "https://www.youtube.com/playlist?list=PL1bauNEiHIgx0PbuWqpvWLds4uHCrVERM", "I'drwNLpSAP"],
-				["Umineko", "https://www.twitch.tv/andersonjph", "Click me"],
-				["Umineko with @._mouse", "https://www.twitch.tv/helloitsmouse", "Who is Mouse?"]
+				["No streams", "https://www.youtube.com/watch?v=bsH-QDlSeWk&list=PLBd_FoFE8OGegkkphN-bwzehUfCpPaYg9&ab_channel=NonOfficialDaily%28ish%29JosephAnderson", "No Upcoming Streams", "gray"],
+				["Persona 3:Reload", "https://www.youtube.com/playlist?list=PL1bauNEiHIgx0PbuWqpvWLds4uHCrVERM", "I'drwNLpSAP", "Blue"],
+				["Persona 3:Reload", "https://www.youtube.com/playlist?list=PL1bauNEiHIgx0PbuWqpvWLds4uHCrVERM", "I'drwNLpSAP", "Blue"],
+				["(fanart) + Persona 3:Reload", "https://www.youtube.com/playlist?list=PL1bauNEiHIgx0PbuWqpvWLds4uHCrVERM", "I'drwNLpSAP", "Blue"],
+				["Umineko", "https://www.twitch.tv/andersonjph", "Click me", "Gold"],
+				["Oops all Umineko", "https://www.twitch.tv/andersonjph", "Click me", "Gold"],
+				["(Umineko fanart) + Oops all Umineko", "https://www.twitch.tv/andersonjph", "Click me", "Gold"],
+				["(fanart) + Oops all Umineko", "https://www.twitch.tv/andersonjph", "Click me", "Gold"],
+				["Umineko with @._mouse", "https://www.twitch.tv/helloitsmouse", "Who is Mouse?", "orange"],
+				["Umineko (potential collab with @jelly_channei)", "https://www.twitch.tv/jelly_channei", "Who is Jelly?", "orange"]
 			];
+
+			const categoryColors = {};
 
 			let nextNextSunday = today.clone();
 			nextNextSunday.day(nextNextSunday.day() === 0 ? 14 : 14);
@@ -732,11 +740,16 @@
 
 			weekDates.forEach(({ date, weekday }) => {
 				const category = schedule[date] || 'No streams';
-				if (!categoryColors[category]) {
-					categoryColors[category] = getRandomColor();
+				let color;
+
+				// Check if the category has a predefined color
+				const categoryLink = categoryLinks.find(item => item[0] === category);
+				if (categoryLink) {
+					color = categoryLink[3]; // Get the predefined color
+				} else {
+					color = getRandomColor(); // Assign a random color if not found
 				}
 
-				const categoryLink = categoryLinks.find(item => item[0] === category);
 				const link = categoryLink ? categoryLink[1] : "https://www.twitch.tv/andersonjph";
 				const tooltipText = categoryLink ? categoryLink[2] : "No Upcoming Streams";
 
@@ -748,7 +761,7 @@
 				dayDiv.className = 'day' + (isPast17 ? ' past-day' : '');
 
 				dayDiv.innerHTML = `
-					<div class="day-header" style="background-color: ${categoryColors[category]}">${weekday} <span class="date">${date}</span></div>
+					<div class="day-header" style="background-color: ${color}">${weekday} <span class="date">${date}</span></div>
 					<div class="category" style="color: ${isPast17 ? 'white' : 'black'};">${category}</div>
 					${category !== 'No streams' ? '<div class="category">At 17:00 UTC</div>' : ''}
 					<div class="tooltip" style="display:none; position:absolute;">
