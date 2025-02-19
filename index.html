@@ -710,25 +710,33 @@
                 dates.push({ date: date.format('DD.MM.YYYY'), weekday: date.format('dddd') });
             }
             return dates;
-        }
+        }	
+		let categoryLinks = [];
+		// Function to load category links from the external file
+		async function loadCategoryLinks() {
+			const url = 'https://raw.githubusercontent.com/IamDivan/Umineko-Waiting-Room/main/Stream%20Categories.txt';
 
+			try {
+				const response = await fetch(url);
+				const text = await response.text();
+				
+				// Split the text into lines and parse each line into an array
+				const lines = text.trim().split('\n');
+				categoryLinks = lines.map(line => JSON.parse(line));
+				
+				console.log(categoryLinks);
+				renderTimetable();
+			} catch (error) {
+				console.error('Error loading category links:', error);
+			}
+		}
+
+		// Call the function to load the category links
+		loadCategoryLinks();
+		
         function renderTimetable(schedule) {
 			const timetable = document.getElementById('timetable');
 			const today = moment.utc();
-			
-			// Define categories with their respective colors
-			const categoryLinks = [
-				["No streams", "https://www.youtube.com/watch?v=bsH-QDlSeWk&list=PLBd_FoFE8OGegkkphN-bwzehUfCpPaYg9&ab_channel=NonOfficialDaily%28ish%29JosephAnderson", "No Upcoming Streams", "gray"],
-				["Persona 3:Reload", "https://www.youtube.com/playlist?list=PL1bauNEiHIgx0PbuWqpvWLds4uHCrVERM", "I'drwNLpSAP", "Blue"],
-				["Persona 3:Reload", "https://www.youtube.com/playlist?list=PL1bauNEiHIgx0PbuWqpvWLds4uHCrVERM", "I'drwNLpSAP", "Blue"],
-				["(fanart) + Persona 3:Reload", "https://janart.bulder.fi/gallery/31", "check out this fanart we have", "Blue"],
-				["Umineko", "https://www.twitch.tv/andersonjph", "Click me", "Gold"],
-				["Oops all Umineko", "https://www.twitch.tv/andersonjph", "Click me", "Gold"],
-				["(Umineko fanart) + Oops all Umineko", "https://janart.bulder.fi/", "Fanart everywhere", "Gold"],
-				["(fanart) + Oops all Umineko", "https://janart.bulder.fi/", "so many fanarts", "Gold"],
-				["Umineko with @._mouse", "https://www.twitch.tv/helloitsmouse", "Who is Mouse?", "orange"],
-				["Umineko (potential collab with @jelly_channei)", "https://www.twitch.tv/jelly_channei", "Who is Jelly?", "orange"]
-			];
 
 			const categoryColors = {};
 
@@ -745,9 +753,9 @@
 				// Check if the category has a predefined color
 				const categoryLink = categoryLinks.find(item => item[0] === category);
 				if (categoryLink) {
-					color = categoryLink[3]; // Get the predefined color
+					color = categoryLink[3];
 				} else {
-					color = getRandomColor(); // Assign a random color if not found
+					color = getRandomColor();
 				}
 
 				const link = categoryLink ? categoryLink[1] : "https://www.twitch.tv/andersonjph";
