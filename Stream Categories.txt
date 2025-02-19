@@ -2,7 +2,7 @@
 ["Persona 3:Reload", "https://www.youtube.com/playlist?list=PL1bauNEiHIgx0PbuWqpvWLds4uHCrVERM", "I'drwNLpSAP", "Blue"]
 ["Persona 3:Reload", "https://www.youtube.com/playlist?list=PL1bauNEiHIgx0PbuWqpvWLds4uHCrVERM", "I'drwNLpSAP", "Blue"]
 ["(fanart) + Persona 3:Reload", "https://janart.bulder.fi/gallery/31", "check out this fanart we have", "Blue"]
-["Umineko", "https://www.twitch.tv/andersonjph", "Click me", "Gold"]
+["Umineko", "https://www.twitch.tv/andersonjph", "Click me", "Red"]
 ["Oops all Umineko", "https://www.twitch.tv/andersonjph", "Click me", "Gold"]
 ["(Umineko fanart) + Oops all Umineko", "https://janart.bulder.fi/", "Fanart everywhere", "Gold"]
 ["(fanart) + Oops all Umineko", "https://janart.bulder.fi/", "so many fanarts", "Gold"]
