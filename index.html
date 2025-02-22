@@ -718,16 +718,17 @@
 
 			try {
 				const response = await fetch(url);
-				const text = await response.text();
+				if (!response.ok) throw new Error('Network response was not ok');
 				
-				// Split the text into lines and parse each line into an array
+				const text = await response.text();
 				const lines = text.trim().split('\n');
 				categoryLinks = lines.map(line => JSON.parse(line));
-				
-				console.log(categoryLinks);
-				renderTimetable();
+
+				console.log(categoryLinks); // Log to see the fetched data
+				return categoryLinks; // Return the loaded links
 			} catch (error) {
 				console.error('Error loading category links:', error);
+				return []; // Return an empty array on error
 			}
 		}
 
@@ -737,8 +738,6 @@
         function renderTimetable(schedule) {
 			const timetable = document.getElementById('timetable');
 			const today = moment.utc();
-
-			const categoryColors = {};
 
 			let nextNextSunday = today.clone();
 			nextNextSunday.day(nextNextSunday.day() === 0 ? 14 : 14);
@@ -926,19 +925,20 @@
 		});
 
         async function init() {
-            try {
-                const schedule = await fetchStreamSchedule();
-                renderTimetable(schedule);
-                startCountdown(schedule);
-                updateLastEvent(schedule);
-                displayCurrentDate();
-                initUTCUpdater(); // Initialize the UTC time updater
-            } catch (error) {
-                console.error('Error fetching stream schedule:', error);
-                const timetable = document.getElementById('timetable');
-                timetable.innerHTML = '<div class="day">Failed to load schedule</div>';
-            }
-        }
+			try {
+				await loadCategoryLinks(); // Wait for category links to load
+				const schedule = await fetchStreamSchedule();
+				renderTimetable(schedule);
+				startCountdown(schedule);
+				updateLastEvent(schedule);
+				displayCurrentDate();
+				initUTCUpdater(); // Initialize the UTC time updater
+			} catch (error) {
+				console.error('Error fetching stream schedule:', error);
+				const timetable = document.getElementById('timetable');
+				timetable.innerHTML = '<div class="day">Failed to load schedule</div>';
+			}
+		}
 
         function getRandomColor() {
             const letters = '0123456789ABCDEF';
