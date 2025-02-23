@@ -4,6 +4,6 @@
 ["Umineko", "https://www.twitch.tv/andersonjph", "Click me", "Gold"]
 ["(Umineko fanart) + Umineko", "https://janart.bulder.fi/", "Fanart everywhere", "Gold"]
 ["(fanart) + Oops all Umineko", "https://janart.bulder.fi/", "so many fanarts", "Gold"]
-["Umineko with @._mouse", "https://www.twitch.tv/helloitsmouse", "Who is Mouse?", "magenta"]
-["Umineko (with @jelly_channei)", "https://www.twitch.tv/jelly_channei", "Who is Jelly?", "magenta"]
+["Umineko with @._mouse", "https://www.twitch.tv/helloitsmouse", "Who is Mouse?", "#6F927B"]
+["Umineko (with @jelly_channei)", "https://www.twitch.tv/jelly_channei", "Who is Jelly?", "#D1C65D"]
 ["Signalis", "https://store.steampowered.com/app/1262350/SIGNALIS/", "Wazzat", "#FF0000"]
