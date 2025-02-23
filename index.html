@@ -140,14 +140,14 @@
         }
 
         .day-header {
-            font-weight: bold;
-            margin-bottom: 5px;
-            padding: 10px;
-            border-radius: 5px;
-            font-size: 1.5em;
-            background-color: #FF5722;
-            color: white;
-        }
+			font-weight: bold;
+			margin-bottom: 5px;
+			padding: 10px;
+			border-radius: 5px;
+			font-size: 1.5em;
+			background-color: #FF5722; /* Change as needed */
+			color: black; /* Default to black */
+		}
 
         .day-header .date {
             font-size: 0.75em;
@@ -410,6 +410,18 @@
 			filter: brightness(1.1);
 			background: rgba(255, 0, 127, 0.2); /* Add a light background effect on hover */
 		}
+		#cursorButton {
+			position: fixed; /* Fixed position */
+			bottom: 300px; /* 20px from the bottom */
+			right: center; /* 20px from the right */
+			padding: 10px 20px;
+			font-size: 16px;
+			background-color: gold;
+			border: none;
+			border-radius: 5px;
+			cursor: pointer;
+			z-index: 1000; /* Ensure it appears above other elements */
+		}
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.34/moment-timezone-with-data.min.js"></script>
@@ -456,6 +468,7 @@
     <div id="current-utc-time" class="last-event"></div>
     <div class="last-event" id="last-event"></div>
     <div class="calendar" id="timetable"></div>
+	<button id="cursorButton" style="display: none;">Change Cursor</button>
 
     <script>
         // Clock Implementation
@@ -468,6 +481,26 @@
                 });
             }));
         };
+		const cursorButton = document.getElementById('cursorButton');
+
+		// Function to change the mouse cursor style
+		function changeCursor() {
+			document.body.style.cursor = 'url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAABxpRE9UAAAAJ0lEQVR42mJcYBCAgAABq9K+gAAAABJRU5ErkJggg=="), auto'; // A simple golden arrow cursor
+		}
+
+		// Monitor the scroll position
+		window.addEventListener('scroll', () => {
+			if (window.scrollY > 3000) { // Adjust this value as needed
+				cursorButton.style.display = 'block'; // Show the button
+			} else {
+				cursorButton.style.display = 'none'; // Hide the button
+			}
+		});
+
+		// Add click event to the button
+		cursorButton.addEventListener('click', () => {
+			changeCursor(); // Change the cursor style
+		});
 
         const drawClock = (bodyImg, hourImg, minuteImg, centerImg) => {
             const now = moment.utc();
@@ -768,21 +801,26 @@
 				dayDiv.className = 'day' + (isPast17 ? ' past-day' : '');
 
 				dayDiv.innerHTML = `
-					<div class="day-header" style="background-color: ${color}">${weekday} <span class="date">${date}</span></div>
-					<div class="category" style="color: ${isPast17 ? 'white' : 'black'};">${category}</div>
+					<div class="day-header ${isPast17 ? 'past-day' : ''}" style="background-color: ${isPast17 ? 'black' : color}; color: ${isPast17 ? 'grey' : 'black'};">${weekday} <span class="date">${date}</span></div>
+					<div class="category" style="color: ${isPast17 ? '#888888' : 'black'};">${category}</div>
 					${category !== 'No streams' ? '<div class="category">At 17:00 UTC</div>' : ''}
 					<div class="tooltip" style="display:none; position:absolute;">
 						<a href="${link}" target="_blank" style="color: white;">${tooltipText}</a>
 					</div>
 				`;
 
+				// Set the background color for future days and current day
 				if (isPast17) {
-					dayDiv.style.backgroundColor = 'black';
-					dayDiv.style.border = '2px solid white'; // White contour for past days
+					dayDiv.style.backgroundColor = 'black'; // Set background for past days
+					dayDiv.style.border = 'none'; // Remove border for past days
+				} else {
+					dayDiv.style.backgroundColor = color; // Set background color for future days
 				}
 
+				// Apply a white border for the current day
 				if (isToday) {
-					dayDiv.style.backgroundColor = 'rgba(255, 215, 0, 1.0)'; // Slightly golden for today's date
+					dayDiv.style.backgroundColor = color; // Set to category color for today
+					dayDiv.style.border = '6px solid white'; // White border for current day
 				}
 
 				dayDiv.addEventListener('mouseenter', function() {
