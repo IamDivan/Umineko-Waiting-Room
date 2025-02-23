@@ -803,10 +803,13 @@
 				const dayDiv = document.createElement('div');
 				dayDiv.className = 'day' + (isPast17 ? ' past-day' : '');
 
+				const textColor = isPast17 ? '#888888' : 'black'; // Black text for future days
+				const textShadow = isPast17 ? 'none' : '1px 1px 2px rgba(255, 255, 255, 0.8)'; // No shadow for past days
+
 				dayDiv.innerHTML = `
-					<div class="day-header ${isPast17 ? 'past-day' : ''}" style="background-color: ${isPast17 ? 'black' : color}; color: ${isPast17 ? 'grey' : 'black'};">${weekday} <span class="date">${date}</span></div>
-					<div class="category" style="color: ${isPast17 ? '#888888' : 'black'};">${category}</div>
-					${category !== 'No streams' ? '<div class="category">At 17:00 UTC</div>' : ''}
+					<div class="day-header ${isPast17 ? 'past-day' : ''}" style="background-color: ${isPast17 ? 'black' : color}; color: ${isPast17 ? 'grey' : textColor}; text-shadow: ${textShadow};">${weekday} <span class="date">${date}</span></div>
+					<div class="category" style="color: ${isPast17 ? '#888888' : textColor}; text-shadow: ${textShadow};">${category}</div>
+					${category !== 'No streams' ? '<div class="category" style="color: ' + textColor + '; text-shadow: ' + textShadow + ';">At 17:00 UTC</div>' : ''}
 					<div class="tooltip" style="display:none; position:absolute;">
 						<a href="${link}" target="_blank" style="color: white;">${tooltipText}</a>
 					</div>
