@@ -114,12 +114,14 @@
         }
 
         .calendar {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 20px;
-            margin-bottom: 20px;
-            z-index: 1;
-        }
+			display: grid;
+			grid-template-columns: repeat(7, 1fr);
+			gap: 20px;
+			margin: 20px auto; /* Center the calendar */
+			padding: 0 20px; /* Add horizontal padding */
+			max-width: auto*0.9; /* Set a maximum width */
+			z-index: 1;
+		}
 
         .day {
             border-radius: 10px;
