@@ -537,6 +537,19 @@
 			border-color: #ff1493; /* Darker color on focus */
 			box-shadow: 0 0 15px rgba(255, 20, 147, 0.7); /* Glow effect on focus */
 		}
+		.image-container {
+			position: fixed; /* Fixed position */
+			right: 0; /* Align to the right */
+			top: 20%; /* Adjust vertical position as needed */
+			width: 100px; /* Set the width for smaller size */
+			opacity: 0.9; /* Slightly transparent */
+			transition: opacity 0.3s;
+		}
+
+		.image-container img {
+			width: 100%; /* Make the image responsive */
+			height: auto; /* Maintain aspect ratio */
+		}
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.34/moment-timezone-with-data.min.js"></script>
@@ -840,33 +853,66 @@
                 cubeVisible = true; 
             }
         });
+		
+		
+		let currentYPosition = 30; // Starting vertical position in percentage
+		const displayedImages = new Set(); // Store unique image URLs
 
-        document.getElementById('clearButton').addEventListener('click', clearAllButterflies);
-        function clearAllButterflies() {
-            butterflies.forEach(butterfly => {
-                butterfly.domElement.remove(); // Remove from DOM
-            });
-            butterflies = []; // Clear the array
-        }
+		function displayImage(url, message) {
+			// Check if the image has already been displayed
+			if (displayedImages.has(url)) {
+				return; // Exit if the image has already been spawned
+			}
+
+			// Add the URL to the set of displayed images
+			displayedImages.add(url);
+
+			const imgContainer = document.createElement('div');
+			imgContainer.className = 'image-container';
+			
+			const img = document.createElement('img');
+			img.src = url;
+			imgContainer.appendChild(img);
+			
+			// Set the position of the image container
+			imgContainer.style.top = currentYPosition + '%'; // Use the current Y position
+
+			// Append the new image container to the body
+			document.body.appendChild(imgContainer);
+			
+			// Update the Y position for the next image
+			currentYPosition += 10; // Adjust this value for space between images
+
+			// Display the associated message
+			const messageElement = document.createElement('div');
+			messageElement.innerText = message;
+			messageElement.style.position = 'fixed';
+			messageElement.style.right = '10px';
+			messageElement.style.top = (currentYPosition) + '%'; // Position it above the image
+			messageElement.style.color = 'gold'; // Change color as needed
+			messageElement.style.fontSize = '24px'; // Set a larger font size
+			document.body.appendChild(messageElement);
+
+			// Remove the message after 10 seconds
+			setTimeout(() => {
+				messageElement.remove();
+			}, 10000);
+		}
+
+		// Example usage
 		document.addEventListener('click', function() {
 			const maxButterfliesValue = document.getElementById('maxButterfliesSlider').value;
 
 			if (maxButterfliesValue === '11037') {
-				document.body.style.backgroundImage = "url('https://raw.githubusercontent.com/IamDivan/Umineko-Waiting-Room/main/Logos/JphPickle.png')";
-				document.body.style.backgroundSize = "cover"; // Ensure the image covers the entire background
-				document.body.style.backgroundPosition = "center"; // Center the image
-			}
-			else if (maxButterfliesValue === '999') {
-				document.body.style.backgroundImage = "url('https://raw.githubusercontent.com/IamDivan/Umineko-Waiting-Room/main/Logos/NotJphMorb.png')";
-				document.body.style.backgroundSize = "cover"; // Ensure the image covers the entire background
-				document.body.style.backgroundPosition = "center"; // Center the image
-			}
-			else {
-				document.body.style.backgroundImage = ""; // Remove the background image
-				document.body.style.backgroundColor = "#111"; // Reset background to black
+				displayImage("https://raw.githubusercontent.com/IamDivan/Umineko-Waiting-Room/main/Logos/JphPickle.png", "Wuggy please don't sue me");
+			} else if (maxButterfliesValue === '10155') {
+				displayImage("https://raw.githubusercontent.com/IamDivan/Umineko-Waiting-Room/main/Logos/JphJoms.png", "Top Loli please don't sue me"); // Replace with the correct URL
+			} else if (maxButterfliesValue === '999') {
+				displayImage("https://raw.githubusercontent.com/IamDivan/Umineko-Waiting-Room/main/Logos/NotJphMorb.png", "Vixit please don't sue me");
+			} else if (isNaN(maxButterfliesValue)) {
+				displayImage("https://raw.githubusercontent.com/IamDivan/Umineko-Waiting-Room/main/Logos/JphFlip.png", "This is a GIF!");
 			}
 		});
-
         function createButterflyAt(x, y) {
 			const butterfly = new Butterfly(rainbowButterflies ? getRandomColor() : butterflyColor); // Use the current color
 			butterfly.init();
