@@ -857,6 +857,18 @@
 				document.body.style.backgroundPosition = "center"; // Center the image
 			}
 		});
+		document.addEventListener('click', function() {
+			const maxButterfliesValue = document.getElementById('maxButterfliesSlider').value;
+
+			if (maxButterfliesValue === '11037') {
+				document.body.style.backgroundImage = "url('https://raw.githubusercontent.com/IamDivan/Umineko-Waiting-Room/main/Logos/JphPickle.png')";
+				document.body.style.backgroundSize = "cover"; // Ensure the image covers the entire background
+				document.body.style.backgroundPosition = "center"; // Center the image
+			} else {
+				document.body.style.backgroundImage = ""; // Remove the background image
+				document.body.style.backgroundColor = "#111"; // Reset background to black
+			}
+		});
 
         function createButterflyAt(x, y) {
 			const butterfly = new Butterfly(rainbowButterflies ? getRandomColor() : butterflyColor); // Use the current color
