@@ -631,29 +631,25 @@
             spawnButterfly();
         }
 		
-		const MAX_BUTTERFLIES = 400;
+		const MAX_BUTTERFLIES = 350;
 		
 		document.addEventListener('mousemove', function(event) {
 			if (butterflies.length >= MAX_BUTTERFLIES) {
-				removeButterflies(butterflies.length - MAX_BUTTERFLIES); // Remove excess butterflies
-				return; // Exit the function to prevent adding more
+				removeButterflies(butterflies.length - MAX_BUTTERFLIES);
+				return; 
 			}
 		});
 
 		function removeButterflies(count) {
 			for (let i = 0; i < count; i++) {
-				const butterfly = butterflies.shift(); // Remove the first butterfly from the array
+				const butterfly = butterflies.shift(); 
 				if (butterfly) {
-					butterfly.domElement.remove(); // Remove from DOM
+					butterfly.domElement.remove(); 
 				}
 			}
 		}
 		
         function spawnButterfly() {
-			if (butterflies.length >= 2) {
-				clearAllButterflies(); // Clear all butterflies if the count exceeds 100
-				return; // Exit the function to prevent adding more
-			}
 			var b = new Butterfly(rainbowButterflies ? getRandomColor() : butterflyColor); // Pass the color
 			b.init();
 			butterflies.push(b);
