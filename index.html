@@ -551,8 +551,8 @@
     <button id="resetColorButton">Reset to Gold</button> <!-- Reset button -->
     <button id="rainbowButton">Turn On Rainbow Butterflies</button> <!-- Rainbow button -->
 	<label for="maxButterfliesSlider">Max Butterflies: <span id="maxButterfliesValue">350</span></label>
-	<input type="range" id="maxButterfliesSlider" min="1" max="1000" value="350">
-	<input type="number" id="maxButterfliesInput" min="1" max="1000" value="350" style="width: 80px; margin-left: 10px;">
+	<input type="range" id="maxButterfliesSlider" min="1" max="20000" value="350">
+	<input type="number" id="maxButterfliesInput" min="1" max="20000" value="350" style="width: 80px; margin-left: 10px;">
 
     <div class="rain" id="rain"></div>
     <div class="header">Umineko Waiting Room</div>
@@ -727,13 +727,9 @@
 
 		document.getElementById('maxButterfliesInput').addEventListener('input', function() {
 			const value = parseInt(this.value, 10);
-			if (value >= 0 && value <= 5000) {
-				MAX_BUTTERFLIES = value;
-				document.getElementById('maxButterfliesSlider').value = MAX_BUTTERFLIES; // Update slider
-				document.getElementById('maxButterfliesValue').textContent = MAX_BUTTERFLIES; // Update displayed value
-			} else {
-				this.value = MAX_BUTTERFLIES; // Reset input to the last valid value
-			}
+			MAX_BUTTERFLIES = value;
+			document.getElementById('maxButterfliesSlider').value = MAX_BUTTERFLIES; // Update slider
+			document.getElementById('maxButterfliesValue').textContent = MAX_BUTTERFLIES; // Update displayed value
 		});
 
 		document.addEventListener('mousemove', function(event) {
@@ -852,6 +848,15 @@
             });
             butterflies = []; // Clear the array
         }
+		document.addEventListener('click', function() {
+			const maxButterfliesValue = document.getElementById('maxButterfliesSlider').value;
+
+			if (maxButterfliesValue === '11037') {
+				document.body.style.backgroundImage = "url('https://raw.githubusercontent.com/IamDivan/Umineko-Waiting-Room/main/Logos/JphPickle.png')";
+				document.body.style.backgroundSize = "cover"; // Ensure the image covers the entire background
+				document.body.style.backgroundPosition = "center"; // Center the image
+			}
+		});
 
         function createButterflyAt(x, y) {
 			const butterfly = new Butterfly(rainbowButterflies ? getRandomColor() : butterflyColor); // Use the current color
