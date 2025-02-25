@@ -2,7 +2,7 @@
 UmiBros we are so in
 
 This is a website dedicated to stream schedule of streamer Joseph Anderson at https://www.twitch.tv/andersonjph/
-(specifically, when is he going to stream "Umineko When They Cry"
+(specifically, when is he going to stream "Umineko When They Cry")
 
 
 -----------------------------
