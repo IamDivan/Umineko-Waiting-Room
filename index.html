@@ -835,6 +835,11 @@
 				createButterflyAt(event.pageX, event.pageY);
 			}
 		});
+		document.getElementById('clearButton').addEventListener('click', function() {
+			// Clear all butterflies
+			butterflies.forEach(butterfly => butterfly.domElement.remove()); // Remove each butterfly from the DOM
+			butterflies = []; // Clear the butterflies array
+		});
 
 		document.addEventListener('mouseup', function() {
 			isMousePressed = false;
