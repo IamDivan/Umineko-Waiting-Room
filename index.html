@@ -630,12 +630,34 @@
         function initButterflies() {
             spawnButterfly();
         }
+		
+		const MAX_BUTTERFLIES = 400;
+		
+		document.addEventListener('mousemove', function(event) {
+			if (butterflies.length >= MAX_BUTTERFLIES) {
+				removeButterflies(butterflies.length - MAX_BUTTERFLIES); // Remove excess butterflies
+				return; // Exit the function to prevent adding more
+			}
+		});
 
+		function removeButterflies(count) {
+			for (let i = 0; i < count; i++) {
+				const butterfly = butterflies.shift(); // Remove the first butterfly from the array
+				if (butterfly) {
+					butterfly.domElement.remove(); // Remove from DOM
+				}
+			}
+		}
+		
         function spawnButterfly() {
-            var b = new Butterfly(rainbowButterflies ? getRandomColor() : butterflyColor); // Pass the color
-            b.init();
-            butterflies.push(b);
-        }
+			if (butterflies.length >= 2) {
+				clearAllButterflies(); // Clear all butterflies if the count exceeds 100
+				return; // Exit the function to prevent adding more
+			}
+			var b = new Butterfly(rainbowButterflies ? getRandomColor() : butterflyColor); // Pass the color
+			b.init();
+			butterflies.push(b);
+		}
 
         function Butterfly(color) {
             this.color = color; // Store the color
