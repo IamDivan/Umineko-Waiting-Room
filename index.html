@@ -564,8 +564,8 @@
     <button id="resetColorButton">Reset to Gold</button> <!-- Reset button -->
     <button id="rainbowButton">Turn On Rainbow Butterflies</button> <!-- Rainbow button -->
 	<label for="maxButterfliesSlider">Max Butterflies: <span id="maxButterfliesValue">350</span></label>
-	<input type="range" id="maxButterfliesSlider" min="1" max="20000" value="350">
-	<input type="number" id="maxButterfliesInput" min="1" max="20000" value="350" style="width: 80px; margin-left: 10px;">
+	<input type="range" id="maxButterfliesSlider" min="0" max="70000000000000000" value="350">
+	<input type="number" id="maxButterfliesInput" min="0" max="70000000000000000" value="350" style="width: 80px; margin-left: 10px;">
 
     <div class="rain" id="rain"></div>
     <div class="header">Umineko Waiting Room</div>
@@ -730,31 +730,30 @@
             spawnButterfly();
         }
 		
-		let MAX_BUTTERFLIES = 350;
+		let MAX_BUTTERFLIES = '350'; // Keep it as a string
 
 		document.getElementById('maxButterfliesSlider').addEventListener('input', function() {
-			MAX_BUTTERFLIES = parseInt(this.value, 10);
+			MAX_BUTTERFLIES = this.value; // Keep it as a string
 			document.getElementById('maxButterfliesValue').textContent = MAX_BUTTERFLIES;
 			document.getElementById('maxButterfliesInput').value = MAX_BUTTERFLIES; // Update input field
 		});
 
 		document.getElementById('maxButterfliesInput').addEventListener('input', function() {
-			const value = parseInt(this.value, 10);
-			MAX_BUTTERFLIES = value;
+			MAX_BUTTERFLIES = this.value; // Keep it as a string
 			document.getElementById('maxButterfliesSlider').value = MAX_BUTTERFLIES; // Update slider
 			document.getElementById('maxButterfliesValue').textContent = MAX_BUTTERFLIES; // Update displayed value
 		});
 
 		document.addEventListener('mousemove', function(event) {
-			if (butterflies.length >= MAX_BUTTERFLIES) {
-				removeButterflies(butterflies.length - MAX_BUTTERFLIES);
+			if (butterflies.length >= parseInt(MAX_BUTTERFLIES, 10)) {
+				removeButterflies(butterflies.length - parseInt(MAX_BUTTERFLIES, 10));
 				return; 
 			}
 		});
-		
+
 		document.addEventListener('mousedown', function(event) {
-			if (butterflies.length >= MAX_BUTTERFLIES) {
-				removeButterflies(butterflies.length - MAX_BUTTERFLIES);
+			if (butterflies.length >= parseInt(MAX_BUTTERFLIES, 10)) {
+				removeButterflies(butterflies.length - parseInt(MAX_BUTTERFLIES, 10));
 				return; 
 			}
 		});
@@ -837,8 +836,8 @@
 		});
 		document.getElementById('clearButton').addEventListener('click', function() {
 			// Clear all butterflies
-			butterflies.forEach(butterfly => butterfly.domElement.remove()); // Remove each butterfly from the DOM
-			butterflies = []; // Clear the butterflies array
+			butterflies.forEach(butterfly => butterfly.domElement.remove()); 
+			butterflies = []; 
 		});
 
 		document.addEventListener('mouseup', function() {
@@ -898,7 +897,6 @@
 			messageElement.style.fontSize = '24px'; // Set a larger font size
 			document.body.appendChild(messageElement);
 
-			// Remove the message after 10 seconds
 			setTimeout(() => {
 				messageElement.remove();
 			}, 10000);
@@ -911,11 +909,13 @@
 			if (maxButterfliesValue === '11037') {
 				displayImage("https://raw.githubusercontent.com/IamDivan/Umineko-Waiting-Room/main/Logos/JphPickle.png", "Wuggy please don't sue me");
 			} else if (maxButterfliesValue === '10155') {
-				displayImage("https://raw.githubusercontent.com/IamDivan/Umineko-Waiting-Room/main/Logos/JphJoms.png", "Top Loli please don't sue me"); // Replace with the correct URL
+				displayImage("https://raw.githubusercontent.com/IamDivan/Umineko-Waiting-Room/main/Logos/JphJoms.png", "Top Loli please don't sue me");
 			} else if (maxButterfliesValue === '999') {
 				displayImage("https://raw.githubusercontent.com/IamDivan/Umineko-Waiting-Room/main/Logos/NotJphMorb.png", "Vixit please don't sue me");
-			} else if (isNaN(maxButterfliesValue)) {
-				displayImage("https://raw.githubusercontent.com/IamDivan/Umineko-Waiting-Room/main/Logos/JphFlip.png", "This is a GIF!");
+			} else if (maxButterfliesValue === '64358223579673204') {
+				displayImage("https://raw.githubusercontent.com/IamDivan/Umineko-Waiting-Room/main/Logos/Mousetrice.png", "Jelly plese don't sue me");
+			}else if (maxButterfliesValue === '0') {
+				displayImage("https://raw.githubusercontent.com/IamDivan/Umineko-Waiting-Room/main/Logos/JphFlip.gif", "Marik please don't sue me");
 			}
 		});
         function createButterflyAt(x, y) {
