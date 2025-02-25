@@ -859,7 +859,7 @@
         });
 		
 		
-		let currentYPosition = 30; // Starting vertical position in percentage
+		let currentYPosition = 60; // Starting vertical position in percentage
 		const displayedImages = new Set(); // Store unique image URLs
 
 		function displayImage(url, message) {
@@ -879,20 +879,20 @@
 			imgContainer.appendChild(img);
 			
 			// Set the position of the image container
-			imgContainer.style.top = currentYPosition + '%'; // Use the current Y position
+			imgContainer.style.top = currentYPosition + 'px'; // Use currentYPosition
 
 			// Append the new image container to the body
 			document.body.appendChild(imgContainer);
 			
 			// Update the Y position for the next image
-			currentYPosition += 14; // Adjust this value for space between images
+			currentYPosition += 100; // Increment by 14 pixels for the next image
 
 			// Display the associated message
 			const messageElement = document.createElement('div');
 			messageElement.innerText = message;
 			messageElement.style.position = 'fixed';
 			messageElement.style.right = '10px';
-			messageElement.style.top = (currentYPosition) + '%'; // Position it above the image
+			messageElement.style.top = (currentYPosition) + 'px'; // Position it below the image
 			messageElement.style.color = 'gold'; // Change color as needed
 			messageElement.style.fontSize = '24px'; // Set a larger font size
 			document.body.appendChild(messageElement);
