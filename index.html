@@ -395,7 +395,7 @@
         }
 		#bellButton {
 			position: absolute;
-			top: 180px; /* Adjust position as needed */
+			top: 290px; 
 			left: 10px;
 			padding: 12px 24px;
 			font-size: 18px;
@@ -450,6 +450,93 @@
             from { transform: rotateX(0) rotateY(0); }
             to { transform: rotateX(360deg) rotateY(360deg); }
         }
+		label {
+			display: block;
+			position: absolute;
+			top: 185px; 
+			left: 10px;
+		}
+
+		#maxButterfliesSlider {
+			position: absolute;
+			top: 220px; 
+			left: 10px;
+		}
+
+		#maxButterfliesInput {
+			position: absolute;
+			top: 245px; 
+			left: 10px; 
+		}		
+		
+		/* Style for the slider */
+		#maxButterfliesSlider {
+			-webkit-appearance: none; /* Remove default styling */
+			width: 300px;
+			height: 10px;
+			border-radius: 5px;
+			background: linear-gradient(to right, #6a5acd, #ff69b4); /* Gradient background */
+			outline: none;
+			transition: background 0.3s ease;
+			box-shadow: 0 0 20px rgba(255, 105, 180, 0.5); /* Glow effect */
+		}
+		#maxButterfliesSlider::-webkit-slider-thumb {
+			-webkit-appearance: none; /* Remove default styling */
+			appearance: none;
+			width: 20px; /* Thumb width */
+			height: 20px; /* Thumb height */
+			border-radius: 50%; /* Circular thumb */
+			background: #ff69b4; /* Thumb color */
+			cursor: pointer;
+			box-shadow: 0 0 10px rgba(255, 105, 180, 0.8); /* Thumb glow */
+			transition: transform 0.2s ease;
+		}
+
+		#maxButterfliesSlider::-webkit-slider-thumb:hover {
+			transform: scale(1.2); /* Scale up on hover */
+		}
+
+		#maxButterfliesSlider::-moz-range-thumb {
+			width: 20px; /* Thumb width */
+			height: 20px; /* Thumb height */
+			border-radius: 50%; /* Circular thumb */
+			background: #ff69b4; /* Thumb color */
+			cursor: pointer;
+			box-shadow: 0 0 10px rgba(255, 105, 180, 0.8); /* Thumb glow */
+			transition: transform 0.2s ease;
+		}
+
+		#maxButterfliesSlider::-moz-range-thumb:hover {
+			transform: scale(1.2); /* Scale up on hover */
+		}
+		/* Style for the label */
+		#maxButterfliesValue {
+			font-family: 'Great Vibes', cursive; /* Use a decorative font */
+			font-size: 1.5em; /* Increase font size */
+			color: #ff69b4; /* Matching color */
+			text-shadow: 0 0 10px rgba(255, 105, 180, 0.7), 0 0 20px rgba(255, 20, 147, 0.5); /* Glow effect */
+			margin-left: 10px; /* Space between text and input */
+		}
+
+		/* Style for the number input */
+		#maxButterfliesInput {
+			width: 80px;
+			margin-left: 10px;
+			border: 2px solid #ff69b4; /* Border color */
+			border-radius: 5px; /* Rounded corners */
+			background: rgba(255, 255, 255, 0.2); /* Slightly transparent background */
+			color: white; /* Text color */
+			font-size: 1.2em; /* Font size */
+			padding: 5px; /* Padding */
+			box-shadow: 0 0 10px rgba(255, 105, 180, 0.5); /* Input glow */
+			transition: border 0.3s ease, box-shadow 0.3s ease; /* Transition for effects */
+		}
+
+		#maxButterfliesInput:focus {
+			outline: none; /* Remove default outline */
+			border-color: #ff1493; /* Darker color on focus */
+			box-shadow: 0 0 15px rgba(255, 20, 147, 0.7); /* Glow effect on focus */
+		}
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.34/moment-timezone-with-data.min.js"></script>
@@ -463,6 +550,9 @@
     <input type="color" id="colorSlider" value="#FFD700"> <!-- Default gold color -->
     <button id="resetColorButton">Reset to Gold</button> <!-- Reset button -->
     <button id="rainbowButton">Turn On Rainbow Butterflies</button> <!-- Rainbow button -->
+	<label for="maxButterfliesSlider">Max Butterflies: <span id="maxButterfliesValue">350</span></label>
+	<input type="range" id="maxButterfliesSlider" min="1" max="1000" value="350">
+	<input type="number" id="maxButterfliesInput" min="1" max="1000" value="350" style="width: 80px; margin-left: 10px;">
 
     <div class="rain" id="rain"></div>
     <div class="header">Umineko Waiting Room</div>
@@ -517,10 +607,6 @@
                 });
             }));
         };
-
-
-
-
         const drawClock = (bodyImg, hourImg, minuteImg, centerImg) => {
             const now = moment.utc();
             const currentHour = now.hours();
@@ -631,9 +717,33 @@
             spawnButterfly();
         }
 		
-		const MAX_BUTTERFLIES = 350;
-		
+		let MAX_BUTTERFLIES = 350;
+
+		document.getElementById('maxButterfliesSlider').addEventListener('input', function() {
+			MAX_BUTTERFLIES = parseInt(this.value, 10);
+			document.getElementById('maxButterfliesValue').textContent = MAX_BUTTERFLIES;
+			document.getElementById('maxButterfliesInput').value = MAX_BUTTERFLIES; // Update input field
+		});
+
+		document.getElementById('maxButterfliesInput').addEventListener('input', function() {
+			const value = parseInt(this.value, 10);
+			if (value >= 0 && value <= 5000) {
+				MAX_BUTTERFLIES = value;
+				document.getElementById('maxButterfliesSlider').value = MAX_BUTTERFLIES; // Update slider
+				document.getElementById('maxButterfliesValue').textContent = MAX_BUTTERFLIES; // Update displayed value
+			} else {
+				this.value = MAX_BUTTERFLIES; // Reset input to the last valid value
+			}
+		});
+
 		document.addEventListener('mousemove', function(event) {
+			if (butterflies.length >= MAX_BUTTERFLIES) {
+				removeButterflies(butterflies.length - MAX_BUTTERFLIES);
+				return; 
+			}
+		});
+		
+		document.addEventListener('mousedown', function(event) {
 			if (butterflies.length >= MAX_BUTTERFLIES) {
 				removeButterflies(butterflies.length - MAX_BUTTERFLIES);
 				return; 
@@ -709,23 +819,23 @@
 
         let isMousePressed = false;
 
-        document.addEventListener('mousedown', function(event) {
-            // Check if the clicked target is a UI element
-            if (!event.target.closest('#clearButton, #copyButton, #colorSlider, #resetColorButton, #rainbowButton, .button, #bellButton')) {
-                isMousePressed = true;
-                createButterflyAt(event.pageX, event.pageY);
-            }
-        });
+		document.addEventListener('mousedown', function(event) {
+			// Check if the clicked target is a UI element
+			if (!event.target.closest('#clearButton, #copyButton, #colorSlider, #resetColorButton, #rainbowButton, #button, #bellButton, #maxButterfliesSlider, #maxButterfliesInput')) {
+				isMousePressed = true;
+				createButterflyAt(event.pageX, event.pageY);
+			}
+		});
 
-        document.addEventListener('mouseup', function() {
-            isMousePressed = false;
-        });
+		document.addEventListener('mouseup', function() {
+			isMousePressed = false;
+		});
 
-        document.addEventListener('mousemove', function(event) {
-            if (isMousePressed && !event.target.closest('#clearButton, #copyButton, #colorSlider, #resetColorButton, #rainbowButton, .button')) {
-                createButterflyAt(event.pageX, event.pageY);
-            }
-        });
+		document.addEventListener('mousemove', function(event) {
+			if (isMousePressed && !event.target.closest('#clearButton, #copyButton, #colorSlider, #resetColorButton, #rainbowButton, .button, #bellButton, #maxButterfliesSlider, #maxButterfliesInput')) {
+				createButterflyAt(event.pageX, event.pageY);
+			}
+		});
 		
 		let cubeVisible = false; 
         window.addEventListener('scroll', () => {
