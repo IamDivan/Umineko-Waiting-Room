@@ -470,16 +470,36 @@
 		}		
 		
 		/* Style for the slider */
-		#maxButterfliesSlider {
-			-webkit-appearance: none; /* Remove default styling */
-			width: 300px;
-			height: 10px;
-			border-radius: 5px;
-			background: linear-gradient(to right, #6a5acd, #ff69b4); /* Gradient background */
-			outline: none;
-			transition: background 0.3s ease;
-			box-shadow: 0 0 20px rgba(255, 105, 180, 0.5); /* Glow effect */
-		}
+		 /* Style for the slider */
+        #maxButterfliesSlider {
+            position: absolute;
+            top: 220px; 
+            left: 10px;
+            -webkit-appearance: none; /* Remove default styling */
+            width: 300px;
+            height: 10px;
+            border-radius: 5px;
+            background: linear-gradient(to right, #6a5acd, #ff69b4); /* Gradient background */
+            outline: none;
+            transition: background 0.3s ease;
+            box-shadow: 0 0 20px rgba(255, 105, 180, 0.5); /* Glow effect */
+        }
+
+        /* Style for the number input */
+        #maxButterfliesInput {
+            position: absolute;
+            top: 245px; 
+            left: 10px; 
+            width: 80px;
+            border: 2px solid #ff69b4; /* Border color */
+            border-radius: 5px; /* Rounded corners */
+            background: rgba(255, 255, 255, 0.2); /* Slightly transparent background */
+            color: white; /* Text color */
+            font-size: 1.2em; /* Font size */
+            padding: 5px; /* Padding */
+            box-shadow: 0 0 10px rgba(255, 105, 180, 0.5); /* Input glow */
+            transition: border 0.3s ease, box-shadow 0.3s ease; /* Transition for effects */
+        }
 		#maxButterfliesSlider::-webkit-slider-thumb {
 			-webkit-appearance: none; /* Remove default styling */
 			appearance: none;
@@ -517,21 +537,6 @@
 			text-shadow: 0 0 10px rgba(255, 105, 180, 0.7), 0 0 20px rgba(255, 20, 147, 0.5); /* Glow effect */
 			margin-left: 10px; /* Space between text and input */
 		}
-
-		/* Style for the number input */
-		#maxButterfliesInput {
-			width: 80px;
-			margin-left: 10px;
-			border: 2px solid #ff69b4; /* Border color */
-			border-radius: 5px; /* Rounded corners */
-			background: rgba(255, 255, 255, 0.2); /* Slightly transparent background */
-			color: white; /* Text color */
-			font-size: 1.2em; /* Font size */
-			padding: 5px; /* Padding */
-			box-shadow: 0 0 10px rgba(255, 105, 180, 0.5); /* Input glow */
-			transition: border 0.3s ease, box-shadow 0.3s ease; /* Transition for effects */
-		}
-
 		#maxButterfliesInput:focus {
 			outline: none; /* Remove default outline */
 			border-color: #ff1493; /* Darker color on focus */
@@ -564,8 +569,8 @@
     <button id="resetColorButton">Reset to Gold</button> <!-- Reset button -->
     <button id="rainbowButton">Turn On Rainbow Butterflies</button> <!-- Rainbow button -->
 	<label for="maxButterfliesSlider">Max Butterflies: <span id="maxButterfliesValue">350</span></label>
-	<input type="range" id="maxButterfliesSlider" min="0" max="70000000000000000" value="350">
-	<input type="number" id="maxButterfliesInput" min="0" max="70000000000000000" value="350" style="width: 80px; margin-left: 10px;">
+    <input type="range" id="maxButterfliesSlider" min="0" max="1000" value="350">
+    <input type="number" id="maxButterfliesInput" min="-70000000000000000" max="700000000000000000" value="350" style="width: 80px; margin-left: 10px;">
 
     <div class="rain" id="rain"></div>
     <div class="header">Umineko Waiting Room</div>
@@ -730,21 +735,22 @@
             spawnButterfly();
         }
 		
-		let MAX_BUTTERFLIES = '350'; // Keep it as a string
+		let MAX_BUTTERFLIES = 350; 
 
-		document.getElementById('maxButterfliesSlider').addEventListener('input', function() {
-			MAX_BUTTERFLIES = this.value; // Keep it as a string
-			document.getElementById('maxButterfliesValue').textContent = MAX_BUTTERFLIES;
-			document.getElementById('maxButterfliesInput').value = MAX_BUTTERFLIES; // Update input field
-		});
+        document.getElementById('maxButterfliesSlider').addEventListener('input', function() {
+            // Update the displayed value and input field
+			MAX_BUTTERFLIES = parseInt(this.value, 10); // Use the input value for spawning checks
+            document.getElementById('maxButterfliesValue').textContent = this.value; // Update the input
+            document.getElementById('maxButterfliesInput').value = this.value; // Update input field
+        });
 
-		document.getElementById('maxButterfliesInput').addEventListener('input', function() {
-			MAX_BUTTERFLIES = this.value; // Keep it as a string
-			document.getElementById('maxButterfliesSlider').value = MAX_BUTTERFLIES; // Update slider
-			document.getElementById('maxButterfliesValue').textContent = MAX_BUTTERFLIES; // Update displayed value
-		});
-
+        document.getElementById('maxButterfliesInput').addEventListener('input', function() {
+            MAX_BUTTERFLIES = parseInt(this.value, 10); // Use the input value for spawning checks
+            document.getElementById('maxButterfliesSlider').value = this.value; // Update slider
+            document.getElementById('maxButterfliesValue').textContent = this.value; // Update displayed value
+        });
 		document.addEventListener('mousemove', function(event) {
+		
 			if (butterflies.length >= parseInt(MAX_BUTTERFLIES, 10)) {
 				removeButterflies(butterflies.length - parseInt(MAX_BUTTERFLIES, 10));
 				return; 
@@ -885,7 +891,7 @@
 			document.body.appendChild(imgContainer);
 			
 			// Update the Y position for the next image
-			currentYPosition += 100; // Increment by 14 pixels for the next image
+			currentYPosition += 100; 
 
 			// Display the associated message
 			const messageElement = document.createElement('div');
@@ -904,7 +910,7 @@
 
 		// Example usage
 		document.addEventListener('click', function() {
-			const maxButterfliesValue = document.getElementById('maxButterfliesSlider').value;
+			const maxButterfliesValue = document.getElementById('maxButterfliesInput').value;
 
 			if (maxButterfliesValue === '11037') {
 				displayImage("https://raw.githubusercontent.com/IamDivan/Umineko-Waiting-Room/main/Logos/JphPickle.png", "Wuggy please don't sue me");
