@@ -10,4 +10,4 @@
 ["(fanart) + Signalis", "https://janart.bulder.fi/gallery/31", "Check this out", "#C40E0E"]
 ["Returnal", "https://store.steampowered.com/app/1649240/Returnal/", "Begins on W-F right after Joe finishes Signalis", "#6A0FCD"]
 
-["Umineko ...HBOMBERGUY???", "https://www.youtube.com/watch?v=0-w-pdqwiBw&ab_channel=KokutanShi", "The Sumerton Slayer", "Gold"]
+["Umineko with (maybe) HBOMBERGUY", "https://www.youtube.com/watch?v=0-w-pdqwiBw&ab_channel=KokutanShi", "The Sumerton Slayer", "Gold"]
