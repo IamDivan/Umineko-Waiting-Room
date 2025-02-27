@@ -1,7 +1,6 @@
 ["No streams", "https://www.youtube.com/watch?v=bsH-QDlSeWk&list=PLBd_FoFE8OGegkkphN-bwzehUfCpPaYg9&ab_channel=NonOfficialDaily(ish)JosephAnderson", "No Streams this day", "gray"]
 ["Persona 3:Reload", "https://www.youtube.com/playlist?list=PL1bauNEiHIgx0PbuWqpvWLds4uHCrVERM", "I'd rather", "Blue"]
 ["(fanart) + Persona 3:Reload", "https://janart.bulder.fi/gallery/31", "check out this fanart we have", "Blue"]
-
 ["Umineko", "https://www.twitch.tv/andersonjph", "Click me", "Gold"]
 ["(Umineko fanart) + Umineko", "https://janart.bulder.fi/", "Fanart everywhere", "Gold"]
 ["Umineko with @._mouse", "https://www.twitch.tv/helloitsmouse", "Who is Mouse?", "#6F927B"]
@@ -9,3 +8,4 @@
 ["Signalis", "https://store.steampowered.com/app/1262350/SIGNALIS/", "Will be streamed W-F until its done, 3-5 streams mb", "#C40E0E"]
 ["(fanart) + Signalis", "https://janart.bulder.fi/gallery/31", "Check this out", "#C40E0E"]
 ["Returnal", "https://store.steampowered.com/app/1649240/Returnal/", "Begins on W-F right after Joe finishes Signalis", "#6A0FCD"]
+
