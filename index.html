@@ -1016,7 +1016,7 @@
 				}
 
 				const link = categoryLink ? categoryLink[1] : "https://www.twitch.tv/andersonjph";
-				const tooltipText = categoryLink ? categoryLink[2] : "No Upcoming Streams";
+				const tooltipText = categoryLink ? categoryLink[2] : "No additional data";
 
 				const eventDate = moment.utc(date, 'DD.MM.YYYY').set({ hour: 17 });
 				const isToday = eventDate.isSame(today, 'day');
