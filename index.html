@@ -956,7 +956,7 @@
             if (this.y > window.innerHeight - padding) this.y = window.innerHeight - padding;
         }
 
-        const streamFileUrl = 'https://raw.githubusercontent.com/IamDivan/Umineko-Waiting-Room/main/Timetable.txt';
+        const streamFileUrl = 'https://raw.githubusercontent.com/IamDivan/uwr/main/Timetable.txt';
 
         async function fetchStreamSchedule() {
             const response = await fetch(streamFileUrl);
@@ -981,7 +981,7 @@
 		let categoryLinks = [];
 		// Function to load category links from the external file
 		async function loadCategoryLinks() {
-			const url = 'https://raw.githubusercontent.com/IamDivan/Umineko-Waiting-Room/main/Stream%20Categories.txt';
+			const url = 'https://raw.githubusercontent.com/IamDivan/uwr/main/Stream%20Categories.txt';
 
 			try {
 				const response = await fetch(url);
