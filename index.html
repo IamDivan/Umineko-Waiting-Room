@@ -986,43 +986,6 @@
                 }
             });
         }
-		function renderTimetable(schedule) {
-            const timetable = document.getElementById('timetable');
-            const today = moment.utc();
-            let nextNextSunday = today.clone();
-            nextNextSunday.day(nextNextSunday.day() === 0 ? 14 : 14);
-            const startDate = nextNextSunday.clone().subtract(20, 'days');
-            const weekDates = createCalendarDates(startDate, 21);
-
-            weekDates.forEach(({ date, weekday }) => {
-                const category = schedule[date] || 'No streams';
-                let color;
-
-                const categoryLink = categoryLinks.find(item => item[0] === category);
-                if (categoryLink) {
-                    color = categoryLink[3];
-                } else {
-                    color = '#888888'; // Default color if not found
-                }
-
-                const link = categoryLink ? categoryLink[1] : "#";
-                const tooltipText = categoryLink ? categoryLink[2] : "No additional data";
-
-                const dayDiv = document.createElement('div');
-                dayDiv.className = 'day';
-                dayDiv.style.backgroundColor = color;
-
-                dayDiv.innerHTML = `
-                    <div class="day-header">${weekday}<span class="date">${date}</span></div>
-                    <div class="category">${category}</div>
-                    <div class="tooltip">
-                        <a href="${link}" target="_blank">${tooltipText}</a>
-                    </div>
-                `;
-
-                timetable.appendChild(dayDiv);
-            });
-        }
 		
         function renderTimetable(schedule) {
 			const timetable = document.getElementById('timetable');
