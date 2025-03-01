@@ -9,6 +9,6 @@
 ["Umineko with @._mouse", "https://www.twitch.tv/helloitsmouse", "Who is Mouse? (aka The Thousand Year main character)", "#6F927B"]
 ["Umineko (with @jelly_channei)", "https://www.twitch.tv/jelly_channei", "Who is Jelly?", "#DDD8A8"]
 ["Umineko When the jellies cry featuring Dante from Devil May Cry", "https://www.twitch.tv/jelly_channei", "Who is Jelly?", "#DDD8A8"]
-["Returnal", "https://store.steampowered.com/app/1649240/Returnal/", "it's this game", "#6A0FCD"]
+["Returnal", "https://store.steampowered.com/app/1649240/Returnal/", "it's this game", "White"]
 
 ["Baldur's Gate 3", "https://www.youtube.com/watch?v=zqJ0V8Bx7sY&ab_channel=AnderClips", "Yotally gonna finish it btw", "White"]
