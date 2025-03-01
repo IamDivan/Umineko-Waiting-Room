@@ -971,28 +971,58 @@
             return dates;
         }	
 		let categoryLinks = [];
-		// Function to load category links from the external file
-		async function loadCategoryLinks() {
-			const url = 'https://raw.githubusercontent.com/IamDivan/Umineko-Waiting-Room/main/Stream%20Categories.txt';
+		async function fetchContent() {
+            const response = await fetch('https://raw.githubusercontent.com/IamDivan/Umineko-Waiting-Room/main/Stream%20Categories.txt');
+            const text = await response.text();
+            const lines = text.trim().split('\n');
 
-			try {
-				const response = await fetch(url);
-				if (!response.ok) throw new Error('Network response was not ok');
-				
-				const text = await response.text();
-				const lines = text.trim().split('\n');
-				categoryLinks = lines.map(line => JSON.parse(line));
+            // Parse each line and store them in categoryLinks
+            lines.forEach(line => {
+                try {
+                    const item = JSON.parse(line);
+                    categoryLinks.push(item);
+                } catch (e) {
+                    console.error('Error parsing line:', line);
+                }
+            });
+        }
+		function renderTimetable(schedule) {
+            const timetable = document.getElementById('timetable');
+            const today = moment.utc();
+            let nextNextSunday = today.clone();
+            nextNextSunday.day(nextNextSunday.day() === 0 ? 14 : 14);
+            const startDate = nextNextSunday.clone().subtract(20, 'days');
+            const weekDates = createCalendarDates(startDate, 21);
 
-				console.log(categoryLinks); // Log to see the fetched data
-				return categoryLinks; // Return the loaded links
-			} catch (error) {
-				console.error('Error loading category links:', error);
-				return []; // Return an empty array on error
-			}
-		}
+            weekDates.forEach(({ date, weekday }) => {
+                const category = schedule[date] || 'No streams';
+                let color;
 
-		// Call the function to load the category links
-		loadCategoryLinks();
+                const categoryLink = categoryLinks.find(item => item[0] === category);
+                if (categoryLink) {
+                    color = categoryLink[3];
+                } else {
+                    color = '#888888'; // Default color if not found
+                }
+
+                const link = categoryLink ? categoryLink[1] : "#";
+                const tooltipText = categoryLink ? categoryLink[2] : "No additional data";
+
+                const dayDiv = document.createElement('div');
+                dayDiv.className = 'day';
+                dayDiv.style.backgroundColor = color;
+
+                dayDiv.innerHTML = `
+                    <div class="day-header">${weekday}<span class="date">${date}</span></div>
+                    <div class="category">${category}</div>
+                    <div class="tooltip">
+                        <a href="${link}" target="_blank">${tooltipText}</a>
+                    </div>
+                `;
+
+                timetable.appendChild(dayDiv);
+            });
+        }
 		
         function renderTimetable(schedule) {
 			const timetable = document.getElementById('timetable');
@@ -1188,7 +1218,7 @@
 
         async function init() {
 			try {
-				await loadCategoryLinks(); // Wait for category links to load
+				await fetchContent();
 				const schedule = await fetchStreamSchedule();
 				renderTimetable(schedule);
 				startCountdown(schedule);
