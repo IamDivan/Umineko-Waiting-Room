@@ -131,7 +131,7 @@
             background-color: white;
             color: black;
             position: relative;
-            height: 150px;
+            height: 200px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
             transition: transform 0.2s;
             z-index: 1;
@@ -140,6 +140,7 @@
         .day:hover {
             transform: scale(1.05);
             z-index: 2;
+            // font-size: 1.2em;
         }
 
         .day-header {
@@ -147,19 +148,19 @@
 			margin-bottom: 5px;
 			padding: 10px;
 			border-radius: 5px;
-			font-size: 1.5em;
+			font-size: 1.75em;
 			background-color: #FF5722; /* Change as needed */
 			color: black; /* Default to black */
 		}
 
         .day-header .date {
-            font-size: 0.75em;
+            font-size: 1.0em;
             display: block;
         }
 
         .category {
             font-weight: bold;
-            font-size: 1.2em;
+            font-size: 1.5em;
             margin-top: 10px;
             color: #333;
         }
@@ -319,6 +320,30 @@
             visibility: visible;
             opacity: 1;
         }
+		.day-content {
+			max-height: 90px; /* Increased height for more visible text */
+			overflow-y: auto; /* Enable vertical scrolling */
+			padding: 10px; /* Padding for content */
+		}
+
+		/* Custom scrollbar styles */
+		.day-content::-webkit-scrollbar {
+			width: 6px; /* Width of the scrollbar */
+		}
+
+		.day-content::-webkit-scrollbar-track {
+			background: rgba(255, 255, 255, 0.1); /* Track color */
+			border-radius: 10px; /* Rounded track */
+		}
+
+		.day-content::-webkit-scrollbar-thumb {
+			background: rgba(255, 255, 255, 0.5); /* Thumb color */
+			border-radius: 10px; /* Rounded thumb */
+		}
+
+		.day-content::-webkit-scrollbar-thumb:hover {
+			background: rgba(255, 255, 255, 0.8); /* Thumb color on hover */
+		}
 
         #current-date-jp {
             font-family: 'Microsoft JhengHei Light', sans-serif;
@@ -1027,8 +1052,10 @@
 
 				dayDiv.innerHTML = `
 					<div class="day-header" style="background-color: ${backgroundColor}; color: ${textColor};text-shadow: ${isToday ? '1px 1px 2px rgba(255, 255, 255, 0.8)' : textShadow};">${weekday} <span class="date">${date}</span></div>
-					<div class="category" style="color: ${isToday ? 'black' : (isPast17 ? color : textColor)}; text-shadow: ${isToday ? '1px 1px 2px rgba(255, 255, 255, 0.8)' : textShadow};">${category}</div>
-					${category !== 'No streams' ? '<div class="category" style="color: ' + (isToday ? 'black' : textColor) + '; text-shadow: ' + textShadow + ';">At 17:00 UTC</div>' : ''}
+					<div class="day-content">
+						<div class="category" style="color: ${isToday ? 'black' : (isPast17 ? color : textColor)}; text-shadow: ${isToday ? '1px 1px 2px rgba(255, 255, 255, 0.8)' : textShadow};">${category}</div>
+						${category !== 'No streams' ? '<div class="category" style="color: ' + (isToday ? 'black' : textColor) + '; text-shadow: ' + textShadow + ';">At 17:00 UTC</div>' : ''}
+					</div>
 					<div class="tooltip" style="display:none; position:absolute;">
 						<a href="${link}" target="_blank" style="color: white;">${tooltipText}</a>
 					</div>
