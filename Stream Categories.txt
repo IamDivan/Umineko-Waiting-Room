@@ -6,7 +6,7 @@
 ["(fanart) + Signalis", "https://janart.bulder.fi/gallery/31", "Check this out", "#C40E0E"]
 ["Umineko", "https://www.twitch.tv/andersonjph", "Click me", "Gold"]
 ["(Umineko fanart) + Umineko", "https://janart.bulder.fi/", "Fanart everywhere", "Gold"]
-["Umineko with @._mouse", "https://www.twitch.tv/helloitsmouse", "Who is Mouse?", "#6F927B"]
+["Umineko with @._mouse", "https://www.twitch.tv/helloitsmouse", "Who is Mouse? (aka The Thousand Year main character)", "#6F927B"]
 ["Umineko (with @jelly_channei)", "https://www.twitch.tv/jelly_channei", "Who is Jelly?", "#DDD8A8"]
 ["Umineko When the jellies cry featuring Dante from Devil May Cry", "https://www.twitch.tv/jelly_channei", "Who is Jelly?", "#DDD8A8"]
 ["Returnal", "https://store.steampowered.com/app/1649240/Returnal/", "it's this game", "#6A0FCD"]
