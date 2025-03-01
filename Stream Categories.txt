@@ -3,7 +3,7 @@
 ["(fanart) + Persona 3:Reload", "https://janart.bulder.fi/gallery/31", "check out this fanart we have", "Blue"]
 
 ["Signalis", "https://www.youtube.com/playlist?list=PLBd_FoFE8OGfz5pQy6L9CMztacfUxsehC", "Joe loved it somehow, lesbian roulette payed off", "#C40E0E"]
-["(fanart) + Signalis", "https://janart.bulder.fi/gallery/31", "Check this out", "#C40E0E"]
+["(fanart) + Signalis", "https://janart.bulder.fi/gallery/34", "Check this out", "#C40E0E"]
 ["Umineko", "https://www.twitch.tv/andersonjph", "Click me", "Gold"]
 ["(Umineko fanart) + Umineko", "https://janart.bulder.fi/", "Fanart everywhere", "Gold"]
 ["Umineko with @._mouse", "https://www.twitch.tv/helloitsmouse", "Who is Mouse? (aka The Thousand Year main character)", "#6F927B"]
