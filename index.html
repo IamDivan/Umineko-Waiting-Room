@@ -986,8 +986,7 @@
                 }
             });
         }
-		
-        function renderTimetable(schedule) {
+		function renderTimetable(schedule) {
 			const timetable = document.getElementById('timetable');
 			const today = moment.utc();
 
@@ -1027,13 +1026,14 @@
 				const backgroundColor = isToday ? color : (isPast17 ? 'black' : color);
 
 				dayDiv.innerHTML = `
-					<div class="day-header" style="background-color: ${backgroundColor}; color: ${isToday ? 'black' : textColor}; text-shadow: ${isToday ? '1px 1px 2px rgba(255, 255, 255, 0.8)' : textShadow};">${weekday} <span class="date">${date}</span></div>
-					<div class="category" style="color: ${isToday ? 'black' : (isPast17 ? '#888888' : textColor)}; text-shadow: ${isToday ? '1px 1px 2px rgba(255, 255, 255, 0.8)' : textShadow};">${category}</div>
+					<div class="day-header" style="background-color: ${backgroundColor}; color: ${textColor};text-shadow: ${isToday ? '1px 1px 2px rgba(255, 255, 255, 0.8)' : textShadow};">${weekday} <span class="date">${date}</span></div>
+					<div class="category" style="color: ${isToday ? 'black' : (isPast17 ? color : textColor)}; text-shadow: ${isToday ? '1px 1px 2px rgba(255, 255, 255, 0.8)' : textShadow};">${category}</div>
 					${category !== 'No streams' ? '<div class="category" style="color: ' + (isToday ? 'black' : textColor) + '; text-shadow: ' + textShadow + ';">At 17:00 UTC</div>' : ''}
 					<div class="tooltip" style="display:none; position:absolute;">
 						<a href="${link}" target="_blank" style="color: white;">${tooltipText}</a>
 					</div>
 				`;
+
 
 				dayDiv.style.backgroundColor = backgroundColor; 
 
@@ -1053,6 +1053,14 @@
 				timetable.appendChild(dayDiv);
 			});
 		}
+		/*dayDiv.innerHTML = `
+					<div class="day-header" style="background-color: ${backgroundColor}; color: ${textColor};">${weekday} <span class="date">${date}</span></div>
+					<div class="category" style="color: ${textColor};">${category}</div>
+					${category !== 'No streams' ? '<div class="category" style="color: ' + textColor + ';">At 17:00 UTC</div>' : ''}
+					<div class="tooltip" style="display:none; position:absolute;">
+						<a href="${link}" target="_blank" style="color: white;">${tooltipText}</a>
+					</div>
+				`;*/
         function startCountdown(schedule) {
             const now = moment.utc(); 
             let targetDate = null;
