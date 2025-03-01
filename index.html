@@ -1012,7 +1012,10 @@
 				if (categoryLink) {
 					color = categoryLink[3];
 				} else {
+					// Assign a random color if the category is not found
 					color = getRandomColor();
+					// Optionally, you can add the new category to categoryLinks
+					categoryLinks.push([category, "Default Link", "No additional data", color]);
 				}
 
 				const link = categoryLink ? categoryLink[1] : "https://www.twitch.tv/andersonjph";
