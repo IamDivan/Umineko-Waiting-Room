@@ -12,4 +12,3 @@
 ["Returnal", "https://store.steampowered.com/app/1649240/Returnal/", "it's this game", "#6A0FCD"]
 
 ["Baldur's Gate 3", "https://www.youtube.com/watch?v=zqJ0V8Bx7sY&ab_channel=AnderClips", "Yotally gonna finish it btw", "White"]
-["Umineko with hbomberguy", "https://www.youtube.com/watch?v=0-w-pdqwiBw", "it's him for sure", "White"]
