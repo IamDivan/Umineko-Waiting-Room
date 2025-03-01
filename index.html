@@ -892,6 +892,106 @@
 		let currentYPosition = 60; // Starting vertical position in percentage
 		const displayedImages = new Set(); // Store unique image URLs
 
+		// Define a color array for the timetable
+		const timetableColors = [
+			"rgb(231, 162, 71)",
+			"rgb(250, 214, 198)",
+			"rgb(0, 0, 0)",
+			"rgb(246, 149, 255)",
+			"rgb(122, 73, 69)",
+			"Gold",
+			"rgb(122, 73, 69)",
+			"rgb(231, 162, 71)",
+			"rgb(250, 214, 198)",
+			"rgb(250, 214, 198)",
+			"Gold",
+			"Gold",
+			"rgb(122, 73, 69)",
+			"Gold",
+			"rgb(231, 162, 71)",
+			"rgb(231, 162, 71)",
+			"rgb(231, 162, 71)",
+			"rgb(122, 73, 69)",
+			"Gold",
+			"Gold",
+			"rgb(122, 73, 69)"
+		];
+
+		let isShehere = false; // Flag to track if the timetable is currently altered
+
+		document.addEventListener('mousedown', function(event) {
+			// Check if the current butterfly color is black
+			if (butterflyColor === "#011037") {
+				isShehere = true;
+				// Clear the existing timetable
+				const timetable = document.getElementById('timetable');
+				while (timetable.firstChild) {
+					timetable.removeChild(timetable.firstChild);
+				}
+
+				// Fetch the schedule and render the new timetable with custom colors
+				fetchStreamSchedule().then(schedule => {
+					renderTimetableWithCustomColors(schedule);
+				}).catch(error => {
+					console.error('Error fetching schedule:', error);
+				});
+			} else if (butterflyColor !== "#011037" && isShehere) {
+				// If the flag is set and the color is not black, remake the original timetable
+				isShehere = false; // Reset the flag
+				const timetable = document.getElementById('timetable');
+				while (timetable.firstChild) {
+					timetable.removeChild(timetable.firstChild);
+				}
+
+				// Fetch the schedule and render the original timetable
+				fetchStreamSchedule().then(schedule => {
+					renderTimetable(schedule);
+				}).catch(error => {
+					console.error('Error fetching schedule:', error);
+				});
+			}
+		});				
+
+		function renderTimetableWithCustomColors(schedule) {
+			const timetable = document.getElementById('timetable');
+			const today = moment.utc();
+
+			let nextNextSunday = today.clone();
+			nextNextSunday.day(nextNextSunday.day() === 0 ? 14 : 14);
+
+			const startDate = nextNextSunday.clone().subtract(20, 'days');
+			const weekDates = createCalendarDates(startDate, 21);
+
+			weekDates.forEach(({ date, weekday }, index) => {
+				const category = schedule[date] || 'No streams';
+				const color = timetableColors[index] || 'white'; // Use the colors from the array
+
+				const dayDiv = document.createElement('div');
+				dayDiv.className = 'day';
+
+				const isToday = moment.utc(date, 'DD.MM.YYYY').isSame(today, 'day');
+
+				dayDiv.innerHTML = `
+					<div class="day-header" style="background-color: ${color}; color: ${color};">${weekday} <span class="date">${date}</span></div>
+					<div class="day-content" style="background-color: ${color}; color: ${color};">
+						<div class="category" style="color: ${color};">${category}</div>
+						${category !== 'No streams' ? '<div class="category" style="color: ' + color + ';">At 17:00 UTC</div>' : ''}
+					</div>
+				`;
+
+				// Apply the same color to the entire day element
+				dayDiv.style.backgroundColor = color;
+				dayDiv.style.color = color;
+
+				if (isToday) {
+					dayDiv.style.border = '6px solid white'; 
+				}
+
+				timetable.appendChild(dayDiv);
+			});
+		}
+
+
 		function displayImage(url, message) {
 			// Check if the image has already been displayed
 			if (displayedImages.has(url)) {
@@ -1220,6 +1320,7 @@
 				renderTimetable(schedule);
 				startCountdown(schedule);
 				updateLastEvent(schedule);
+				const isShehere = false
 				displayCurrentDate();
 				initUTCUpdater(); // Initialize the UTC time updater
 			} catch (error) {
