@@ -11,5 +11,7 @@
 ["Umineko (with @jelly_channei AND @._mouse)", "https://youtu.be/Udl4NkFL4Vs?si=KjFDSteldqqS_EMZ", "Joettler strikes back against Mousetrice + Jellove", "orange"]
 ["Umineko When the jellies cry featuring Dante from Devil Ma", "https://www.twitch.tv/jelly_channei", "Starring jelly_channei", "#DDD8A8"]
 ["Returnal", "https://store.steampowered.com/app/1649240/Returnal/", "it's this game", "White"]
+["Umineko + maybe Umineko fanart? idk?", "https://github.com/IamDivan/Umineko-Waiting-Room/blob/main/Logos/for%20timetable/Mousetruth.png", "Who know what Joe will do honestly", "Gold"]
+
 
 ["Baldur's Gate 3", "https://www.youtube.com/watch?v=zqJ0V8Bx7sY&ab_channel=AnderClips", "Yotally gonna finish it btw", "White"]
