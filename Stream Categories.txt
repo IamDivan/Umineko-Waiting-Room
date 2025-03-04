@@ -13,5 +13,6 @@
 ["Returnal", "https://store.steampowered.com/app/1649240/Returnal/", "it's this game", "White"]
 ["Umineko + maybe Umineko fanart? idk?", "https://github.com/IamDivan/Umineko-Waiting-Room/blob/main/Logos/for%20timetable/Mousetruth.png", "Who know what Joe will do honestly", "Gold"]
 
+["(probably) No streams", "https://github.com/IamDivan/Umineko-Waiting-Room/blob/main/Logos/for%20timetable/break%20week.png", "Announced on JADS", "#CCCAC4"]
 
 ["Baldur's Gate 3", "https://www.youtube.com/watch?v=zqJ0V8Bx7sY&ab_channel=AnderClips", "Yotally gonna finish it btw", "White"]
