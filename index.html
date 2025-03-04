@@ -114,6 +114,10 @@
             z-index: 1;
         }
 
+        .header.off {
+            color: grey; /* Change to grey when toggled */
+        }
+
         .calendar {
 			display: grid;
 			grid-template-columns: repeat(7, 1fr);
@@ -264,6 +268,7 @@
             transform: rotate3d(1, 0.5, 0, 110deg);
             cursor: grab;
         }
+		
 
         .left-wing, .right-wing {
             width: 24px;
@@ -443,7 +448,7 @@
             height: 100px;
             position: fixed;
             bottom: 50px;
-            right: 50px;
+            right: 70px;
             transform-style: preserve-3d;
             animation: rotate 5s infinite linear;
 			opacity: 0;  
@@ -573,11 +578,32 @@
 			width: 100px; /* Set the width for smaller size */
 			opacity: 0.9; /* Slightly transparent */
 			transition: opacity 0.3s;
+			pointer-events: none; /* Prevent interaction */
 		}
 
 		.image-container img {
 			width: 100%; /* Make the image responsive */
 			height: auto; /* Maintain aspect ratio */
+		}
+		.sgl-container {
+            display: none; /* Initially hidden */
+            position: absolute; /* Position it absolutely */
+            top: 350px; /* Adjust this value to position it under the bell button */
+            left: 10px; /* Align with the bell button */
+            opacity: 0.9; /* Slightly transparent */
+        }
+        .sgl-container img {
+            width: 100px; /* Set the width for smaller size */
+            height: auto; /* Maintain aspect ratio */
+            transform: scaleX(-1); /* Mirror the image horizontally */
+        }
+	
+		.butterfly img {
+			width: 100px; /* Set a fixed width */
+			height: auto; /* Maintain aspect ratio */
+			display: block; /* Ensure no extra space below */
+			transform: none; /* Remove any transformations */
+			transition: none; /* Disable transitions */
 		}
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
@@ -595,9 +621,13 @@
 	<label for="maxButterfliesSlider">Max Butterflies: <span id="maxButterfliesValue">350</span></label>
     <input type="range" id="maxButterfliesSlider" min="1" max="1000" value="350">
     <input type="number" id="maxButterfliesInput" min="-70000000000000000" max="700000000000000000" value="350" style="width: 80px; margin-left: 10px;">
-
+	<div class="sgl-container" id="seagullImage">
+        <img src="https://raw.githubusercontent.com/IamDivan/Umineko-Waiting-Room/main/Logos/seagulls/seagul11.png" alt="Seagull">
+    </div>
+	<div id="keyText" style="display: none; position: fixed; position: absolute; left: 10px; top: 400px; font-size: 24px; font-weight: bold;"></div>
+	
     <div class="rain" id="rain"></div>
-    <div class="header">Umineko Waiting Room</div>
+    <div class="header" id="toggleHeader">Umineko Waiting Room</div>
     <button class="button off" id="playButton">Turn On Rain Sounds</button>
 
     <audio id="rainSound" loop>
@@ -698,6 +728,8 @@
         });
 
         // Existing JavaScript Code Below
+		let text_color2; 
+		text_color2 = getRandomColor(); // Generate a random color
         let isRainSoundPlaying = false;
         let butterflyColor = "#FFD700"; // Default color
         let rainbowButterflies = false; // Toggle for rainbow butterflies
@@ -740,6 +772,16 @@
                 console.error('Could not copy text: ', err);
             });
         });
+		const keyText = document.getElementById('keyText');
+
+		window.addEventListener('scroll', () => {
+			if (window.scrollX > 800) {
+				keyText.style.display = 'block'; // Show the text
+				seagullImage.style.display = 'block'; 
+				keyText.innerText = "KEYKEY"; // Set the text
+				keyText.style.color = text_color2; // Set random color
+			} 
+		});
 
         function createRain() {
             const rainContainer = document.getElementById('rain');
@@ -754,10 +796,6 @@
         }
 
         createRain();
-
-        function initButterflies() {
-            spawnButterfly();
-        }
 		
 		let MAX_BUTTERFLIES = 350; 
 
@@ -797,53 +835,87 @@
 			}
 		}
 		
-        function spawnButterfly() {
-			var b = new Butterfly(rainbowButterflies ? getRandomColor() : butterflyColor); // Pass the color
-			b.init();
-			butterflies.push(b);
-		}
-
         function Butterfly(color) {
-            this.color = color; // Store the color
-            this.init = function() {
-                this.x = Math.random() * window.innerWidth;
-                this.y = Math.random() * window.innerHeight;
+			this.color = color; // Store the color
+			this.init = function() {
+				this.x = Math.random() * window.innerWidth;
+				this.y = Math.random() * window.innerHeight;
 
-                this.domElement = document.createElement('div');
-                this.domElement.className = 'butterfly';
-                this.domElement.innerHTML = `
-                    <div class="left-wing">
-                        <div class="top" style="background: ${this.color};"></div>
-                        <div class="bottom" style="background: ${this.color};"></div>
-                    </div>
-                    <div class="right-wing">
-                        <div class="top" style="background: ${this.color};"></div>
-                        <div class="bottom" style="background: ${this.color};"></div>
-                    </div>
-                `;
-                document.body.appendChild(this.domElement);
-            }
+				this.domElement = document.createElement('div');
+				this.domElement.className = 'butterfly';
 
-            this.moveButterfly = function() {
-                const padding = 20;
-                const boundaryX = window.innerWidth - 110 - padding;
+				this.domElement.innerHTML = `
+					<div class="left-wing">
+						<div class="top" style="background: ${this.color};"></div>
+						<div class="bottom" style="background: ${this.color};"></div>
+					</div>
+					<div class="right-wing">
+						<div class="top" style="background: ${this.color};"></div>
+						<div class="bottom" style="background: ${this.color};"></div>
+					</div>
+				`;
+				document.body.appendChild(this.domElement);
+			};
 
-                this.domElement.style.transform = 'translate3D(' + this.x + 'px, ' + this.y + 'px, 0px) rotate3d(1, 0.5, 0, 110deg)';
-                
-                var randomnumberX = Math.random();
-                var randomnumberY = Math.random();
-                
-                if (randomnumberX > 0.8) this.directionX = !this.directionX;
-                if (randomnumberY > 0.8) this.directionY = !this.directionY;
+			this.moveButterfly = function() {
+				const padding = 20;
+				const boundaryX = window.innerWidth - 110 - padding;
 
-                this.x += this.directionX ? 1 : -1;
-                this.y += this.directionY ? 1 : -1;
+				this.domElement.style.transform = 'translate3D(' + this.x + 'px, ' + this.y + 'px, 0px) rotate3d(1, 0.5, 0, 110deg)';
 
-                if (this.x < padding) this.x = padding; // Keep within left padding
-                if (this.x > boundaryX) this.x = boundaryX; // Keep within right boundary
-                if (this.y < padding) this.y = padding; // Keep within top padding
-            }
-        }
+				var randomnumberX = Math.random();
+				var randomnumberY = Math.random();
+
+				if (randomnumberX > 0.8) this.directionX = !this.directionX;
+				if (randomnumberY > 0.8) this.directionY = !this.directionY;
+
+				this.x += this.directionX ? 1 : -1;
+				this.y += this.directionY ? 1 : -1;
+
+				if (this.x < padding) this.x = padding; // Keep within left padding
+				if (this.x > boundaryX) this.x = boundaryX; // Keep within right boundary
+				if (this.y < padding) this.y = padding; // Keep within top padding
+			};
+		}
+		
+        function Seagul() {
+			this.init = function() {
+				this.x = Math.random() * window.innerWidth;
+				this.y = Math.random() * window.innerHeight;
+
+				this.domElement = document.createElement('div');
+				this.domElement.className = 'butterfly';
+				// Directly display the seagull image with transformations
+				this.domElement.innerHTML = `<img src="https://raw.githubusercontent.com/IamDivan/Umineko-Waiting-Room/main/Logos/seagulls/sgl7.png" style="width: 45px; height: 40px; transform: rotate(0deg) scaleY(0.9); transition: none;">`;
+				document.body.appendChild(this.domElement);
+			};
+			this.moveButterfly = function() {
+				const padding = 20;
+				const boundaryX = window.innerWidth - 110 - padding; 
+				const moveAmount_x = 0.9; // Different movement speed
+				const moveAmount_y = 0.3; // Different movement speed
+					
+				var randomnumberX = Math.random();
+				var randomnumberY = Math.random();
+				// Smooth movement logic
+				if (randomnumberX > 0.98) this.directionX = !this.directionX;
+				if (randomnumberY > 0.955) this.directionY = !this.directionY;
+					
+				this.x += this.directionX ? moveAmount_x : -moveAmount_x;
+				this.y += this.directionY ? moveAmount_y : -moveAmount_y;
+
+					// Update the image transform based on direction
+				const img = this.domElement.querySelector('img');
+				img.style.transform = `scaleY(1.75) scaleX(${this.directionX ? 1 : -1})`; // Flip horizontally
+
+					// Keep within boundaries
+				if (this.x < padding) this.x = padding;
+				if (this.x > boundaryX) this.x = boundaryX;
+				if (this.y < padding) this.y = padding;
+
+				this.domElement.style.transform = 'translate3D(' + this.x + 'px, ' + this.y + 'px, 0px)';
+			};
+		}
 
         function animate() {
             butterflies.forEach(function(butterfly) {
@@ -851,15 +923,14 @@
             });
             requestAnimationFrame(animate);
         }
-
-        initButterflies();
+		
         animate();
 
         let isMousePressed = false;
-
+		
 		document.addEventListener('mousedown', function(event) {
 			// Check if the clicked target is a UI element
-			if (!event.target.closest('#clearButton, #copyButton, #colorSlider, #resetColorButton, #rainbowButton, #button, #bellButton, #maxButterfliesSlider, #maxButterfliesInput')) {
+			if (!event.target.closest('#clearButton, #copyButton, #colorSlider, #resetColorButton, #rainbowButton, #button, #bellButton, #maxButterfliesSlider, #maxButterfliesInput,#toggleHeader')) {
 				isMousePressed = true;
 				createButterflyAt(event.pageX, event.pageY);
 			}
@@ -875,8 +946,27 @@
 		});
 
 		document.addEventListener('mousemove', function(event) {
-			if (isMousePressed && !event.target.closest('#clearButton, #copyButton, #colorSlider, #resetColorButton, #rainbowButton, .button, #bellButton, #maxButterfliesSlider, #maxButterfliesInput')) {
+			if (isMousePressed && !event.target.closest('#clearButton, #copyButton, #colorSlider, #resetColorButton, #rainbowButton, .button, #bellButton, #maxButterfliesSlider, #maxButterfliesInput,#toggleHeader')) {
 				createButterflyAt(event.pageX, event.pageY);
+			}
+		});
+		
+		let isHeaderClickable = false; 
+
+		document.addEventListener('mousemove', function(event) {
+			if (butterflyColor.toUpperCase() === text_color2){
+				isHeaderClickable = true;
+				seagullImage.style.display = 'none'; 
+				keyText.style.display = 'none';
+			}
+		});
+		
+		const header = document.getElementById('toggleHeader');
+        const seagullImage = document.getElementById('seagullImage');
+
+		header.addEventListener('click', function() {
+			if (isHeaderClickable) { 
+				this.classList.toggle('off'); 
 			}
 		});
 		
@@ -888,9 +978,8 @@
             }
         });
 		
-		
-		let currentYPosition = 60; // Starting vertical position in percentage
-		const displayedImages = new Set(); // Store unique image URLs
+		let currentYPosition = 60; 
+		const displayedImages = new Set(); 
 
 		// Define a color array for the timetable
 		const timetableColors = [
@@ -917,7 +1006,7 @@
 			"rgb(122, 73, 69)"
 		];
 
-		let isShehere = false; // Flag to track if the timetable is currently altered
+		let isShehere = false; 
 
 		document.addEventListener('mousedown', function(event) {
 			// Check if the current butterfly color is black
@@ -928,22 +1017,17 @@
 				while (timetable.firstChild) {
 					timetable.removeChild(timetable.firstChild);
 				}
-
-				// Fetch the schedule and render the new timetable with custom colors
 				fetchStreamSchedule().then(schedule => {
 					renderTimetableWithCustomColors(schedule);
 				}).catch(error => {
 					console.error('Error fetching schedule:', error);
 				});
 			} else if (butterflyColor !== "#011037" && isShehere) {
-				// If the flag is set and the color is not black, remake the original timetable
-				isShehere = false; // Reset the flag
+				isShehere = false; 
 				const timetable = document.getElementById('timetable');
 				while (timetable.firstChild) {
 					timetable.removeChild(timetable.firstChild);
 				}
-
-				// Fetch the schedule and render the original timetable
 				fetchStreamSchedule().then(schedule => {
 					renderTimetable(schedule);
 				}).catch(error => {
@@ -978,8 +1062,6 @@
 						${category !== 'No streams' ? '<div class="category" style="color: ' + color + ';">At 17:00 UTC</div>' : ''}
 					</div>
 				`;
-
-				// Apply the same color to the entire day element
 				dayDiv.style.backgroundColor = color;
 				dayDiv.style.color = color;
 
@@ -990,7 +1072,6 @@
 				timetable.appendChild(dayDiv);
 			});
 		}
-
 
 		function displayImage(url, message) {
 			// Check if the image has already been displayed
@@ -1049,29 +1130,19 @@
 			}
 		});
         function createButterflyAt(x, y) {
-			const butterfly = new Butterfly(rainbowButterflies ? getRandomColor() : butterflyColor); // Use the current color
+
+            if (header.classList.contains('off')) {
+                var butterfly = new Seagul(); // Create a seagull if header is off
+            } else {
+                var color = rainbowButterflies ? getRandomColor() : butterflyColor;
+                var butterfly = new Butterfly(color); // Create a butterfly if header is on
+            }
 			butterfly.init();
 			butterfly.x = x - 30; // Adjust x position
 			butterfly.y = y - 30; // Adjust y position
 			butterfly.moveButterfly();
 			butterflies.push(butterfly);
 		}
-
-        Butterfly.prototype.moveButterfly = function() {
-            const padding = 25;
-            const boundaryX = window.innerWidth - 110 - padding;
-            this.domElement.style.transform = 'translate3D(' + this.x + 'px, ' + this.y + 'px, 0px) rotate3d(1, 0.5, 0, 110deg)';
-            
-            this.x += (Math.random() > 0.5 ? 1 : -1) * (Math.random() * 2);
-            this.y += (Math.random() > 0.5 ? 1 : -1) * (Math.random() * 2);
-
-            // Keep within boundaries
-            if (this.x < padding) this.x = padding;
-            if (this.x > boundaryX) this.x = boundaryX;
-            if (this.y < padding) this.y = padding;
-            if (this.y > window.innerHeight - padding) this.y = window.innerHeight - padding;
-        }
-
         const streamFileUrl = 'https://raw.githubusercontent.com/IamDivan/Umineko-Waiting-Room/main/Timetable.txt';
 
         async function fetchStreamSchedule() {
@@ -1246,9 +1317,6 @@
 
                 document.getElementById('days-since-last-event').innerHTML = dayText;
 
-                if (percentage > 0 && butterflies.length === 0) {
-                    initButterflies();
-                }
             };
 
             updateCountdown();
@@ -1331,13 +1399,13 @@
 		}
 
         function getRandomColor() {
-            const letters = '0123456789ABCDEF';
-            let color = '#';
-            for (let i = 0; i < 6; i++) {
-                color += letters[Math.floor(Math.random() * 16)];
-            }
-            return color;
-        }
+			const letters = '0123456789ABCDEF';
+			let color = '#';
+			for (let i = 0; i < 6; i++) {
+				color += letters[Math.floor(Math.random() * 16)];
+			}
+			return color;
+		}
 
         // Update butterflies color when the slider changes
         document.getElementById('colorSlider').addEventListener('input', function() {
@@ -1352,12 +1420,12 @@
 
         // Toggle rainbow butterflies
         document.getElementById('rainbowButton').addEventListener('click', function() {
-            rainbowButterflies = !rainbowButterflies; // Toggle rainbow effect
-            this.textContent = rainbowButterflies ? "Turn Off Rainbow Butterflies" : "Turn On Rainbow Butterflies"; // Update button text
-        });
+			rainbowButterflies = !rainbowButterflies; // Toggle rainbow effect
+			this.textContent = rainbowButterflies ? "Turn Off Rainbow Butterflies" : "Turn On Rainbow Butterflies"; // Update button text
+		});
 
         init();
-        initButterflies();
+
     </script>
 </body>
 </html>
