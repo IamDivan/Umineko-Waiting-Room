@@ -1145,29 +1145,6 @@
 		}
         const streamFileUrl = 'https://gist.githubusercontent.com/IamDivan/8c77cea884b46245044c072ead3262d4/raw/andersonjph%20Timetable.txt';
 
-		async function fetchStreamSchedule() {
-			try {
-				const response = await fetch(streamFileUrl);
-				if (!response.ok) {
-					throw new Error(`HTTP error! Status: ${response.status}`);
-				}
-				const text = await response.text();
-				
-				return text.split('\n').reduce((acc, line) => {
-					const [date, category] = line.split(', ').map(item => item.trim());
-					// Check if date and category are valid
-					if (date && category) {
-						acc[date] = category;
-					}
-					return acc;
-				}, {});
-			} catch (error) {
-				console.error('Error fetching schedule:', error);
-				// Return an empty object to prevent breaking the app
-				return {};
-			}
-		}
-
         function createCalendarDates(startDate, numDays) {
             const dates = [];
             for (let i = 0; i < numDays; i++) {
@@ -1192,6 +1169,29 @@
                 }
             });
         }
+
+		async function fetchStreamSchedule() {
+			try {
+				const response = await fetch(streamFileUrl);
+				if (!response.ok) {
+					throw new Error(`HTTP error! Status: ${response.status}`);
+				}
+				const text = await response.text();
+				
+				return text.split('\n').reduce((acc, line) => {
+					const [date, category] = line.split(', ').map(item => item.trim());
+					// Check if date and category are valid
+					if (date && category) {
+						acc[date] = category; // Store the original category
+					}
+					return acc;
+				}, {});
+			} catch (error) {
+				console.error('Error fetching schedule:', error);
+				return {};
+			}
+		}
+	
 		function renderTimetable(schedule) {
 			const timetable = document.getElementById('timetable');
 			const today = moment.utc();
@@ -1203,9 +1203,8 @@
 			const weekDates = createCalendarDates(startDate, 21);
 
 			weekDates.forEach(({ date, weekday }) => {
-				const category = schedule[date] || 'No streams';
 				let color;
-
+				let category = schedule[date] || 'No streams';
 				const categoryLink = categoryLinks.find(item => item[0] === category);
 				if (categoryLink) {
 					color = categoryLink[3];
@@ -1214,7 +1213,16 @@
 					color = getRandomColor();
 					// Optionally, you can add the new category to categoryLinks
 					categoryLinks.push([category, "Default Link", "No additional data", color]);
-				}
+				}				
+				// Match and extract the time from the "(At HH:MM UTC)" format
+				const timeMatch = category.match(/\(At\s+(\d{2}:\d{2})\s+UTC\)/);
+				let timeText = timeMatch ? timeMatch[1] : ''; // Extract time if it exists
+
+				// Remove the "(At HH:MM UTC)" part from the category
+				category = category.replace(/\s*\(At\s+\d{2}:\d{2}\s+UTC\)\s*/, '');
+
+				// Remove "At " from the timeText
+				timeText = timeText.replace(/^At\s+|\s+UTC$/g, '').trim();
 
 				const link = categoryLink ? categoryLink[1] : "https://www.twitch.tv/andersonjph";
 				const tooltipText = categoryLink ? categoryLink[2] : "No additional data";
@@ -1232,16 +1240,15 @@
 				const backgroundColor = isToday ? color : (isPast17 ? 'black' : color);
 
 				dayDiv.innerHTML = `
-					<div class="day-header" style="background-color: ${backgroundColor}; color: ${textColor};text-shadow: ${isToday ? '1px 1px 2px rgba(255, 255, 255, 0.8)' : textShadow};">${weekday} <span class="date">${date}</span></div>
+					<div class="day-header" style="background-color: ${backgroundColor}; color: ${textColor}; text-shadow: ${isToday ? '1px 1px 2px rgba(255, 255, 255, 0.8)' : textShadow};">${weekday} <span class="date">${date}</span></div>
 					<div class="day-content">
 						<div class="category" style="color: ${isToday ? 'black' : (isPast17 ? color : textColor)}; text-shadow: ${isToday ? '1px 1px 2px rgba(255, 255, 255, 0.8)' : textShadow};">${category}</div>
-						${category !== 'No streams' ? '<div class="category" style="color: ' + (isToday ? 'black' : textColor) + '; text-shadow: ' + textShadow + ';">At 17:00 UTC</div>' : ''}
+						${category !== 'No streams' ? `<div class="category" style="color: ${isToday ? 'black' : textColor}; text-shadow: ${textShadow};">${timeText} UTC</div>` : ''}
 					</div>
 					<div class="tooltip" style="display:none; position:absolute;">
 						<a href="${link}" target="_blank" style="color: white;">${tooltipText}</a>
 					</div>
 				`;
-
 
 				dayDiv.style.backgroundColor = backgroundColor; 
 
@@ -1261,14 +1268,7 @@
 				timetable.appendChild(dayDiv);
 			});
 		}
-		/*dayDiv.innerHTML = `
-					<div class="day-header" style="background-color: ${backgroundColor}; color: ${textColor};">${weekday} <span class="date">${date}</span></div>
-					<div class="category" style="color: ${textColor};">${category}</div>
-					${category !== 'No streams' ? '<div class="category" style="color: ' + textColor + ';">At 17:00 UTC</div>' : ''}
-					<div class="tooltip" style="display:none; position:absolute;">
-						<a href="${link}" target="_blank" style="color: white;">${tooltipText}</a>
-					</div>
-				`;*/
+
         function startCountdown(schedule) {
             const now = moment.utc(); 
             let targetDate = null;
