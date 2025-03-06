@@ -1203,8 +1203,9 @@
 			const weekDates = createCalendarDates(startDate, 21);
 
 			weekDates.forEach(({ date, weekday }) => {
-				let color;
 				let category = schedule[date] || 'No streams';
+				let color;
+
 				const categoryLink = categoryLinks.find(item => item[0] === category);
 				if (categoryLink) {
 					color = categoryLink[3];
@@ -1213,10 +1214,11 @@
 					color = getRandomColor();
 					// Optionally, you can add the new category to categoryLinks
 					categoryLinks.push([category, "Default Link", "No additional data", color]);
-				}				
+				}
+				
 				// Match and extract the time from the "(At HH:MM UTC)" format
 				const timeMatch = category.match(/\(At\s+(\d{2}:\d{2})\s+UTC\)/);
-				let timeText = timeMatch ? timeMatch[1] : ''; // Extract time if it exists
+				let timeText = timeMatch ? timeMatch[1] : '17:00'; // Default to '17:00' if no match
 
 				// Remove the "(At HH:MM UTC)" part from the category
 				category = category.replace(/\s*\(At\s+\d{2}:\d{2}\s+UTC\)\s*/, '');
