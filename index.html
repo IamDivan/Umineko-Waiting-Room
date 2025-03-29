@@ -1059,7 +1059,7 @@
 					<div class="day-header" style="background-color: ${color}; color: ${color};">${weekday} <span class="date">${date}</span></div>
 					<div class="day-content" style="background-color: ${color}; color: ${color};">
 						<div class="category" style="color: ${color};">${category}</div>
-						${category !== 'No streams' ? '<div class="category" style="color: ' + color + ';">At 16:00 UTC</div>' : ''}
+						${category !== 'No streams' ? '<div class="category" style="color: ' + color + ';">At 17:00 UTC</div>' : ''}
 					</div>
 				`;
 				dayDiv.style.backgroundColor = color;
@@ -1218,7 +1218,7 @@
 				
 				// Match and extract the time from the "(At HH:MM UTC)" format
 				const timeMatch = category.match(/\(At\s+(\d{2}:\d{2})\s+UTC\)/);
-				let timeText = timeMatch ? timeMatch[1] : '16:00'; // Default to '16:00' if no match
+				let timeText = timeMatch ? timeMatch[1] : '17:00'; // Default to '17:00' if no match
 
 				// Remove the "(At HH:MM UTC)" part from the category
 				category = category.replace(/\s*\(At\s+\d{2}:\d{2}\s+UTC\)\s*/, '');
@@ -1229,22 +1229,22 @@
 				const link = categoryLink ? categoryLink[1] : "https://www.twitch.tv/andersonjph";
 				const tooltipText = categoryLink ? categoryLink[2] : "No additional data";
 
-				const eventDate = moment.utc(date, 'DD.MM.YYYY').set({ hour: 16 });
+				const eventDate = moment.utc(date, 'DD.MM.YYYY').set({ hour: 17 });
 				const isToday = eventDate.isSame(today, 'day');
-				const ispast16 = eventDate.isBefore(today) || (isToday && today.hour() >= 16);
+				const ispast17 = eventDate.isBefore(today) || (isToday && today.hour() >= 17);
 
 				const dayDiv = document.createElement('div');
-				dayDiv.className = 'day' + (ispast16 ? ' past-day' : '');
+				dayDiv.className = 'day' + (ispast17 ? ' past-day' : '');
 
-				const textColor = ispast16 ? '#888888' : 'black';
-				const textShadow = ispast16 ? 'none' : '1px 1px 2px rgba(255, 255, 255, 0.8)';
+				const textColor = ispast17 ? '#888888' : 'black';
+				const textShadow = ispast17 ? 'none' : '1px 1px 2px rgba(255, 255, 255, 0.8)';
 
-				const backgroundColor = isToday ? color : (ispast16 ? 'black' : color);
+				const backgroundColor = isToday ? color : (ispast17 ? 'black' : color);
 
 				dayDiv.innerHTML = `
 					<div class="day-header" style="background-color: ${backgroundColor}; color: ${textColor}; text-shadow: ${isToday ? '1px 1px 2px rgba(255, 255, 255, 0.8)' : textShadow};">${weekday} <span class="date">${date}</span></div>
 					<div class="day-content">
-						<div class="category" style="color: ${isToday ? 'black' : (ispast16 ? color : textColor)}; text-shadow: ${isToday ? '1px 1px 2px rgba(255, 255, 255, 0.8)' : textShadow};">${category}</div>
+						<div class="category" style="color: ${isToday ? 'black' : (ispast17 ? color : textColor)}; text-shadow: ${isToday ? '1px 1px 2px rgba(255, 255, 255, 0.8)' : textShadow};">${category}</div>
 						${category !== 'No streams' ? `<div class="category" style="color: ${isToday ? 'black' : textColor}; text-shadow: ${textShadow};">${timeText} UTC</div>` : ''}
 					</div>
 					<div class="tooltip" style="display:none; position:absolute;">
@@ -1277,7 +1277,7 @@
             let lastEventDate = null;
 
             for (const [date, category] of Object.entries(schedule)) {
-                const eventDate = moment.utc(date, 'DD.MM.YYYY').set({ hour: 16, minute: 0, second: 0 });
+                const eventDate = moment.utc(date, 'DD.MM.YYYY').set({ hour: 17, minute: 0, second: 0 });
 
                 if (eventDate.isAfter(now) && category.includes("Umineko")) {
                     targetDate = eventDate;
@@ -1341,7 +1341,7 @@
             let lastEventDate = null;
 
             for (const [date, category] of Object.entries(schedule)) {
-                const eventDate = moment.utc(date, 'DD.MM.YYYY').set({ hour: 16, minute: 0, second: 0 });
+                const eventDate = moment.utc(date, 'DD.MM.YYYY').set({ hour: 17, minute: 0, second: 0 });
 
                 if (eventDate.isBefore(now) && category.includes("Umineko")) {
                     lastEventDate = eventDate;
